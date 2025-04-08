@@ -32,8 +32,7 @@ test.beforeEach("Register the User", async ({ page }) => {
       testData.userDetails.password
     );
   } else if ((await page.title()) === "Login") {
-    await login.fillPassword("1Oaktreecloud!");
-    await login.clickSignin();
+    await login.fillPasswordAndSignIn(testData.userDetails.password);
   }
 });
 
@@ -96,7 +95,7 @@ test("Complete the Application for SDET Scholarship Program", async ({
     testData.essays.essay2
   );
   await curricularActivity.nextPageClick();
-  await page.pause()
+  await page.pause();
 });
 
 test.afterEach(

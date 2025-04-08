@@ -28,9 +28,10 @@ export class LoginPage {
     await this.emailField.waitFor({ state: "detached" });
   }
 
-  async fillPassword(password: string) {
+  async fillPasswordAndSignIn(password: string) {
     await expect(this.passwordField).toBeEditable();
     await this.passwordField.fill(password);
+    await this.clickSignin()
   }
 
   async clickSignin() {
