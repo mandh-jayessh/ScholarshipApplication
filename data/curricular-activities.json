@@ -1,0 +1,26 @@
+[
+    {
+        "activityName": "Yoga",
+        "yearsInvolved": 1,
+        "description": "Yoga is performed",
+        "achievements": "Health Benefits"
+    },
+    {
+        "activityName": "Singing",
+        "yearsInvolved": 2,
+        "description": "Songs are sung",
+        "achievements": "Lyrics are easy to memorize now"
+    },
+    {
+        "activityName": "Dancing",
+        "yearsInvolved": 1,
+        "description": "Various dance forms",
+        "achievements": "Flexible body"
+    },
+    {
+        "activityName": "Coding",
+        "yearsInvolved": 3,
+        "description": "Tools and Technologies",
+        "achievements": "Good Hands-on experience"
+    }
+]

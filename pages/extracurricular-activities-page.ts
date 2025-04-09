@@ -7,8 +7,8 @@ export class ExtracurricularActivitiesPage {
   addEntryBanner: Locator;
   addEntryModalClose: Locator;
   extracurricularActivityName: Locator;
-  hoursInvolvedUpArrow: Locator;
-  hoursInvolvedField: Locator;
+  yearsInvolvedUpArrow: Locator;
+  yearsInvolvedField: Locator;
   leadershipRolesField: Locator;
   descriptionOfInvolvement: Locator;
   nextPageButton: Locator;
@@ -24,8 +24,8 @@ export class ExtracurricularActivitiesPage {
       name: "Close Add Entry modal",
     });
     this.extracurricularActivityName = page.getByPlaceholder("Short Input");
-    this.hoursInvolvedUpArrow = page.locator("//*[@data-direction='up']");
-    this.hoursInvolvedField = page.getByRole("textbox", {
+    this.yearsInvolvedUpArrow = page.locator("//*[@data-direction='up']");
+    this.yearsInvolvedField = page.getByRole("textbox", {
       name: "Total Number of Years Involved",
     });
     this.leadershipRolesField = page.getByPlaceholder("Long Input").first();
@@ -48,7 +48,7 @@ export class ExtracurricularActivitiesPage {
     await this.addNewEntry();
     await expect(this.addEntryBanner).toContainText("Add Entry");
     await expect(this.extracurricularActivityName).toBeEditable();
-    await expect(this.hoursInvolvedField).toBeEditable();
+    await expect(this.yearsInvolvedField).toBeEditable();
     await expect(this.leadershipRolesField).toBeEditable();
     await expect(this.descriptionOfInvolvement).toBeEditable();
     await this.addEntryModalClose.click();
@@ -79,8 +79,8 @@ export class ExtracurricularActivitiesPage {
   }
 
   async fillYearsInvolved(years: number) {
-    await this.hoursInvolvedUpArrow.click();
-    await this.hoursInvolvedField.fill(years.toString());
+    await this.yearsInvolvedUpArrow.click();
+    await this.yearsInvolvedField.fill(years.toString());
   }
 
   async fillLeadershipRoles(roles: string) {

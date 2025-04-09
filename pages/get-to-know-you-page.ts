@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from "@playwright/test";
 
-export class ApplicationStartPage {
+export class GetToKnowYouPage {
   page: Page;
   heading: Locator;
   streetAddressField: Locator;

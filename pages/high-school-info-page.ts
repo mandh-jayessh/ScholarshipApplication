@@ -13,6 +13,7 @@ export class HighSchoolInfoPage {
   calendarIcon: Locator;
   graduationYear: Locator;
   uploadFileButton: Locator;
+  deleteUploadedFileButton: Locator;
   nextPageButton: Locator;
 
   constructor(page: Page) {
@@ -30,7 +31,10 @@ export class HighSchoolInfoPage {
     this.calendarIcon = page.locator("[class$=-DateInput-section]");
     this.graduationYear = page.getByPlaceholder("Enter a date");
     this.uploadFileButton = page.getByText("Upload File");
-    this.nextPageButton = this.page.getByRole("button", { name: "Next Page" });
+    this.deleteUploadedFileButton = page.getByRole("button", {
+      name: "delete",
+    });
+    this.nextPageButton = page.getByRole("button", { name: "Next Page" });
   }
 
   async validateHighSchoolInfoPage() {
@@ -96,16 +100,17 @@ export class HighSchoolInfoPage {
   }
 
   async uploadFile() {
+    const filePath = "transcriptToUpload/My School Transcript.pdf"
     const fileChooserPromise = this.page.waitForEvent("filechooser");
+    await this.clickUploadFileButton()
+    const fileChooser = await fileChooserPromise;
+    await fileChooser.setFiles(filePath);
+    await this.deleteUploadedFileButton.waitFor({ state: "visible" });
+  }
+
+  async clickUploadFileButton(){
     await expect(this.uploadFileButton).toBeEnabled();
     await this.uploadFileButton.click();
-    const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles(
-      path.join(__dirname, "My School Transcript.pdf")
-    );
-    await this.page
-      .getByRole("button", { name: "My School Transcript.pdf" })
-      .waitFor({ state: "visible" });
   }
 
   async nextPageClick() {

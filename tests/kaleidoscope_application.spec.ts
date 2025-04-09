@@ -3,103 +3,99 @@ import { faker } from "@faker-js/faker";
 import { SdetScholarshipLandingPage } from "../pages/landing-page";
 import { LoginPage } from "../pages/login-page";
 import { SignupPage } from "../pages/signup-page";
-import { ApplicationStartPage } from "../pages/application-start-page";
+import { GetToKnowYouPage } from "../pages/get-to-know-you-page";
 import { ExtracurricularActivitiesPage } from "../pages/extracurricular-activities-page";
 import { HighSchoolInfoPage } from "../pages/high-school-info-page";
 import { EssayPage } from "../pages/essay-page";
 import { ReviewApplicationPage } from "../pages/review-application-page";
-import testData from "../data/test-data.json";
+import userData from "../data/user-details.json";
+import schoolData from "../data/high-school-info.json";
+import activityData from "../data/curricular-activities.json";
+import essayData from "../data/essays.json";
 
 test.beforeEach("Register the User", async ({ page }) => {
   const landing = new SdetScholarshipLandingPage(page);
   const login = new LoginPage(page);
   const signup = new SignupPage(page);
-  const email = faker.internet.email();
-  
+  globalThis.email = faker.internet.email();
+
   await landing.goto();
-  await landing.validatelandingPage()
+  await landing.validatelandingPage();
   await landing.loginApply();
-  await page.waitForLoadState("networkidle");
-  await login.validateloginPage()
-  await login.fillEmail(email);
-  console.log(`Email: ${email}`);
+  await login.fillEmail(globalThis.email);
+  console.log(`Email: ${globalThis.email}`);
   await login.clickNext();
-  await page.waitForLoadState("domcontentloaded");
   if ((await page.title()) === "Signup") {
-    await signup.validateSignupPage()
     await signup.submitSignupDetails(
-      testData.userDetails.firstName,
-      testData.userDetails.lastName,
-      testData.userDetails.mobilePhone,
-      testData.userDetails.password
+      userData.firstName,
+      userData.lastName,
+      userData.mobilePhone,
+      userData.password
     );
   } else if ((await page.title()) === "Login") {
-    await login.fillPasswordAndSignIn(testData.userDetails.password);
+    await login.validateloginPage();
+    await login.fillPasswordAndSignIn(userData.password);
   }
 });
 
 test("Application for SDET Scholarship Program", async ({ page }) => {
-  const applicationStart = new ApplicationStartPage(page);
+  const getToKnowYou = new GetToKnowYouPage(page);
   const curricularActivity = new ExtracurricularActivitiesPage(page);
   const highSchoolInfo = new HighSchoolInfoPage(page);
   const essay = new EssayPage(page);
   const reviewApplication = new ReviewApplicationPage(page);
 
-  await applicationStart.validateGetToKnowYouPage()
-  await applicationStart.fillUpDetails(
-    testData.userAddress.streetAddress,
-    testData.userAddress.state,
-    testData.userAddress.city,
-    testData.userAddress.zip,
-    testData.userAddress.country
+  await getToKnowYou.validateGetToKnowYouPage();
+  await getToKnowYou.fillUpDetails(
+    userData.streetAddress,
+    userData.state,
+    userData.city,
+    userData.zip,
+    userData.country
   );
-  await applicationStart.nextPageClick();
+  await getToKnowYou.nextPageClick();
   await curricularActivity.validateActivitiesPage();
   await curricularActivity.addEntry(
-    testData.curricularActivities[0].activityName,
-    testData.curricularActivities[0].hoursPerWeek,
-    testData.curricularActivities[0].description,
-    testData.curricularActivities[0].achievements
+    activityData[0].activityName,
+    activityData[0].yearsInvolved,
+    activityData[0].description,
+    activityData[0].achievements
   );
   await curricularActivity.nextPageClick();
   await curricularActivity.validate2entriesRequired();
   for (let i = 1; i <= 3; i++) {
-    const activity = testData.curricularActivities[i];
     await curricularActivity.addEntry(
-      activity.activityName,
-      activity.hoursPerWeek,
-      activity.description,
-      activity.achievements
+      activityData[i].activityName,
+      activityData[i].yearsInvolved,
+      activityData[i].description,
+      activityData[i].achievements
     );
   }
   await curricularActivity.nextPageClick();
-  await highSchoolInfo.validateHighSchoolInfoPage()
+  await highSchoolInfo.validateHighSchoolInfoPage();
   await highSchoolInfo.fillUpSchoolDetails(
-    testData.highSchoolInfo.schoolName,
-    testData.highSchoolInfo.schoolStreet,
-    testData.highSchoolInfo.city,
-    testData.highSchoolInfo.state,
-    testData.highSchoolInfo.zip,
-    testData.highSchoolInfo.grade,
-    testData.highSchoolInfo.graduationYear
+    schoolData.schoolName,
+    schoolData.schoolStreet,
+    schoolData.city,
+    schoolData.state,
+    schoolData.zip,
+    schoolData.grade,
+    schoolData.graduationYear
   );
-  await highSchoolInfo.nextPageClick()
-  await essay.validateEssayPage()
+  await highSchoolInfo.nextPageClick();
+  await essay.validateEssayPage();
   await essay.validatePresenceOfEssayBoxes();
-  await essay.fillupAnimalsAndSchoolsEssays(
-    testData.essays.essay1,
-    testData.essays.essay2
-  );
+  await essay.fillupAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
   await essay.nextPageClick();
-  await reviewApplication.validateReviewPage()
+  await reviewApplication.validateReviewPage();
   await reviewApplication.reviewPage1Contents();
   await reviewApplication.reviewCurricularPageContents();
   await reviewApplication.reviewhighSchoolInfoPageContents();
   await reviewApplication.reviewEssayPageContents();
-  const url = page.url()
-  console.log(`URL: ${url}`)
+  const url = page.url();
+  console.log(`URL: ${url}`);
   await reviewApplication.submitApplication();
-  await page.goto(url)
+  await page.goto(url);
 });
 
 test.afterEach("Close and Log Status", async ({ page }, testInfo) => {

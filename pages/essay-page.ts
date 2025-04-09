@@ -32,7 +32,7 @@ export class EssayPage {
     this.essayOtherInputBox = page.getByRole("textbox", {
       name: "Provide an essay about any topic",
     });
-    this.nextPageButton = this.page.getByRole("button", { name: "Next Page" });
+    this.nextPageButton = page.getByRole("button", { name: "Next Page" });
   }
 
   async validateEssayPage() {
