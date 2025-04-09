@@ -3,15 +3,20 @@ import testData from "../data/test-data.json";
 
 export class ReviewApplicationPage {
   page: Page;
+  application_tab: Locator
+  application_section: Locator
+  documents_tab: Locator
+  documents_section: Locator
   expandGetToKnow: Locator;
-  expandCirricularActivities: Locator;
+  expandCurricularActivities: Locator;
   expandHighSchoolInfo: Locator;
   expandEssay: Locator;
   submitButton: Locator;
+  printApplicationButton: Locator;
   firstName: Locator;
   lastName: Locator;
   email: Locator;
-  userStreetSAddress: Locator;
+  userStreetAddress: Locator;
   userState: Locator;
   userCity: Locator;
   userZip: Locator;
@@ -35,10 +40,14 @@ export class ReviewApplicationPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.application_tab = page.getByRole('tab', { name: 'Application' })
+    this.application_section = page.locator("[id*='-panel-application']")
+    this.documents_tab = page.getByRole('tab', { name: 'Documents' })
+    this.documents_section = page.locator("[id*='-panel-documents']")
     this.expandGetToKnow = page.getByRole("button", {
       name: "1.Lets get to know you! Edit",
     });
-    this.expandCirricularActivities = page.getByRole("button", {
+    this.expandCurricularActivities = page.getByRole("button", {
       name: "2.Extracurricular Activities Edit",
     });
     this.expandHighSchoolInfo = page.getByRole("button", {
@@ -46,10 +55,11 @@ export class ReviewApplicationPage {
     });
     this.expandEssay = page.getByRole("button", { name: "4.Essay Edit" });
     this.submitButton = page.locator("span").getByText("Submit");
+    this.printApplicationButton = page.locator("span").getByText("Print Application")
     this.firstName = page.locator("span:has-text('First Name')");
     this.lastName = page.locator("span:has-text('Last Name')");
     this.email = page.locator("span:has-text('Email Address')");
-    this.userStreetSAddress = page
+    this.userStreetAddress = page
       .locator("span:has-text('Street Address')")
       .first();
     this.userState = page.locator("span:has-text('State ')").first();
@@ -74,70 +84,55 @@ export class ReviewApplicationPage {
     this.essayAboutSection = page.locator("span:has-text('Essay About')");
   }
 
-  async openCloseGetToKnow(){
-    await this.expandGetToKnow.waitFor({ state: "visible" });
-    await this.expandGetToKnow.click();
-}
+  async validateReviewPage() {
+    await this.application_section.waitFor({ state: "visible" });
+    await this.documents_tab.click()
+    await expect(this.documents_section).toBeVisible()
+    await this.application_tab.click()
+    await expect(this.application_section).toBeVisible()
+  }
+
+  async openCloseSection(locator: Locator) {
+    await locator.waitFor({ state: "visible" });
+    await locator.click();
+  }
+
   async reviewPage1Contents() {
-    await this.openCloseGetToKnow()
+    await this.openCloseSection(this.expandGetToKnow);
     await expect(this.firstName).toContainText(testData.userDetails.firstName);
     await expect(this.lastName).toContainText(testData.userDetails.lastName);
     await expect(this.email).toContainText("@");
-    await expect(this.userStreetSAddress).toContainText(
+    await expect(this.userStreetAddress).toContainText(
       testData.userAddress.streetAddress
     );
     await expect(this.userState).toContainText(testData.userAddress.state);
     await expect(this.userCity).toContainText(testData.userAddress.city);
     await expect(this.userZip).toContainText(testData.userAddress.zip);
     await expect(this.userCountry).toContainText(testData.userAddress.country);
-    await this.openCloseGetToKnow()
-  }
-
-  async openCloseCurricularActivities(){
-    await this.expandCirricularActivities.scrollIntoViewIfNeeded()
-    await this.expandCirricularActivities.click();
+    await this.openCloseSection(this.expandGetToKnow);
   }
 
   async reviewCurricularPageContents(){
-    await this.openCloseCurricularActivities()
-
-    await this.activity1.click();
-    await expect(this.page.getByLabel('Singing')).toContainText(testData.curricularActivities[1].activityName);
-    await expect(this.page.getByLabel('Singing')).toContainText(testData.curricularActivities[1].hoursPerWeek.toString());
-    await expect(this.page.getByLabel('Singing')).toContainText(testData.curricularActivities[1].description);
-    await expect(this.page.getByLabel('Singing')).toContainText(testData.curricularActivities[1].achievements);
-    await this.activity1.click();
-
-    await this.activity2.click();
-    await expect(this.activity2section).toContainText(testData.curricularActivities[2].activityName);
-    await expect(this.activity2section).toContainText(testData.curricularActivities[2].hoursPerWeek.toString());
-    await expect(this.activity2section).toContainText(testData.curricularActivities[2].description);
-    await expect(this.activity2section).toContainText(testData.curricularActivities[2].achievements);
-    await this.activity2.click();
-
-    await this.activity3.click();
-    await expect(this.activity3section).toContainText(testData.curricularActivities[3].activityName);
-    await expect(this.activity3section).toContainText(testData.curricularActivities[3].hoursPerWeek.toString());
-    await expect(this.activity3section).toContainText(testData.curricularActivities[3].description);
-    await expect(this.activity3section).toContainText(testData.curricularActivities[3].achievements);
-    await this.activity3.click();
-
-    await this.activity4.click();
-    await expect(this.activity4section).toContainText(testData.curricularActivities[0].activityName);
-    await expect(this.activity4section).toContainText(testData.curricularActivities[0].hoursPerWeek.toString());
-    await expect(this.activity4section).toContainText(testData.curricularActivities[0].description);
-    await expect(this.activity4section).toContainText(testData.curricularActivities[0].achievements);
-    await this.activity4.click();
-    await this.openCloseCurricularActivities()
-  }
-
-  async openCloseSchoolInfo(){
-    await this.expandHighSchoolInfo.scrollIntoViewIfNeeded()
-    await this.expandHighSchoolInfo.click(); 
+    await this.openCloseSection(this.expandCurricularActivities);
+      const activities = [
+      { button: this.activity1, section: this.activity1section, data: testData.curricularActivities[1] },
+      { button: this.activity2, section: this.activity2section, data: testData.curricularActivities[2] },
+      { button: this.activity3, section: this.activity3section, data: testData.curricularActivities[3] },
+      { button: this.activity4, section: this.activity4section, data: testData.curricularActivities[0] },
+    ];
+    for (const activity of activities) {
+      await activity.button.click();
+      await expect(activity.section).toContainText(activity.data.activityName);
+      await expect(activity.section).toContainText(activity.data.hoursPerWeek.toString());
+      await expect(activity.section).toContainText(activity.data.description);
+      await expect(activity.section).toContainText(activity.data.achievements);
+      await activity.button.click(); 
+    }
+    await this.openCloseSection(this.expandCurricularActivities);
   }
 
   async reviewhighSchoolInfoPageContents(){
-   await this.openCloseSchoolInfo()
+    await this.openCloseSection(this.expandHighSchoolInfo);
     await expect(this.schoolName).toContainText(testData.highSchoolInfo.schoolName)
     await expect(this.schoolstreet.first()).toContainText(testData.highSchoolInfo.schoolStreet)
     await expect(this.schoolcity).toContainText(testData.highSchoolInfo.city)
@@ -145,19 +140,14 @@ export class ReviewApplicationPage {
     await expect(this.schoolZip).toContainText(testData.highSchoolInfo.zip.toString())
     await expect(this.grade).toContainText(testData.highSchoolInfo.grade.toString())
     await expect(this.graduationYear).toContainText(testData.highSchoolInfo.graduationYear.toString())
-    await this.openCloseSchoolInfo()
-  }
-
-  async openCloseEssaySection(){
-    await this.expandEssay.scrollIntoViewIfNeeded()
-    await this.expandEssay.click()
+    await this.openCloseSection(this.expandHighSchoolInfo);
   }
 
   async reviewEssayPageContents(){
-    await this.openCloseEssaySection()
+    await this.openCloseSection(this.expandEssay);
     await expect(this.essayAboutSection.locator("nth=0")).toContainText(testData.essays.essay1)
     await expect(this.essayAboutSection.locator("nth=1")).toContainText(testData.essays.essay2)
-    await this.openCloseEssaySection()
+    await this.openCloseSection(this.expandEssay);
   }
 
   async submitApplication() {

@@ -2,6 +2,7 @@ import { Page, Locator, expect } from "@playwright/test";
 
 export class EssayPage {
   page: Page;
+  heading: Locator;
   carsCheckbox: Locator;
   animalsCheckbox: Locator;
   schoolCheckbox: Locator;
@@ -14,6 +15,7 @@ export class EssayPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.heading = page.getByTestId("page-title");
     this.carsCheckbox = page.getByRole("checkbox", { name: "Cars" });
     this.animalsCheckbox = page.getByRole("checkbox", { name: "Animals" });
     this.schoolCheckbox = page.getByRole("checkbox", { name: "School" });
@@ -21,7 +23,6 @@ export class EssayPage {
     this.essayCarsInputBox = page.getByRole("textbox", {
       name: "Essay about Cars",
     });
-    // this.essayCarsInputBox = page.locator('//*[text()="Essay about Cars"]/following-sibling::div[contains(@class, "Textarea-wrapper")]');
     this.essayAnimalInputBox = page.getByRole("textbox", {
       name: "Essay about Animals",
     });
@@ -31,8 +32,12 @@ export class EssayPage {
     this.essayOtherInputBox = page.getByRole("textbox", {
       name: "Provide an essay about any topic",
     });
-    this.nextPageButton = this.page.getByRole("button", { name: "Next Page" })
-    // this.essayOtherInputBox = page.locator('//*[text()="Provide an essay about any topic"]/following-sibling::div[contains(@class, "Textarea-wrapper")]');
+    this.nextPageButton = this.page.getByRole("button", { name: "Next Page" });
+  }
+
+  async validateEssayPage() {
+    await this.otherCheckbox.waitFor({ state: "visible" });
+    await expect(this.heading).toHaveText("Essay");
   }
 
   async validatePresenceOfEssayBoxes() {
@@ -50,7 +55,6 @@ export class EssayPage {
   }
 
   async validateCarsEssayBox() {
-    await this.carsCheckbox.waitFor({ state: "visible" });
     await this.carsCheckbox.check();
     await expect(this.carsCheckbox).toBeChecked();
     await expect(this.essayCarsInputBox).toBeEditable();
