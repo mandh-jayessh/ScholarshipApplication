@@ -18,7 +18,6 @@ export class ExtracurricularActivitiesPage {
   constructor(page: Page) {
     this.page = page;
     this.heading = page.locator("//h2");
-    // this.heading = page.getByTestId("page-title");
     this.addEntryButton = page.locator("span").getByText("Add Entry");
     this.addEntryBanner = page.getByRole("banner");
     this.addEntryModalClose = page.getByRole("button", {

@@ -9,7 +9,6 @@ import { HighSchoolInfoPage } from "../pages/high-school-info-page";
 import { EssayPage } from "../pages/essay-page";
 import { ReviewApplicationPage } from "../pages/review-application-page";
 import testData from "../data/test-data.json";
-test.setTimeout(9000000)
 
 test.beforeEach("Register the User", async ({ page }) => {
   const landing = new SdetScholarshipLandingPage(page);
@@ -22,11 +21,10 @@ test.beforeEach("Register the User", async ({ page }) => {
   await landing.loginApply();
   await page.waitForLoadState("networkidle");
   await login.validateloginPage()
-  await login.fillEmail("Russ24@hotmail.com");
+  await login.fillEmail(email);
   console.log(`Email: ${email}`);
   await login.clickNext();
   await page.waitForLoadState("domcontentloaded");
-  const pageTitle = await page.title();
   if ((await page.title()) === "Signup") {
     await signup.validateSignupPage()
     await signup.submitSignupDetails(
@@ -99,8 +97,9 @@ test("Application for SDET Scholarship Program", async ({ page }) => {
   await reviewApplication.reviewhighSchoolInfoPageContents();
   await reviewApplication.reviewEssayPageContents();
   const url = page.url()
-  console.log(url)
+  console.log(`URL: ${url}`)
   await reviewApplication.submitApplication();
+  await page.goto(url)
 });
 
 test.afterEach("Close and Log Status", async ({ page }, testInfo) => {

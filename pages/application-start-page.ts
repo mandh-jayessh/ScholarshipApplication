@@ -12,7 +12,6 @@ export class ApplicationStartPage {
 
   constructor(page: Page) {
     this.page = page;
-    // this.heading = page.locator("//h2");
     this.heading = page.getByTestId("page-title");
     this.streetAddressField = page.getByPlaceholder(
       "Enter your street address"

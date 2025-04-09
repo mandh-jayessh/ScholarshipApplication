@@ -18,9 +18,9 @@ export class LoginPage {
   }
 
   async validateloginPage() {
+    await this.passwordField.waitFor({ state: "visible" });
     await expect(this.page).toHaveTitle("Login");
     await expect(this.page).toHaveURL("https://apply.mykaleidoscope.com/login");
-    await this.heading.waitFor({ state: "visible" });
     await expect(this.heading).toHaveText("Sign In To Kaleidoscope");
   }
 
