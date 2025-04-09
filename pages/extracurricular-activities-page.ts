@@ -8,7 +8,8 @@ export class ExtracurricularActivitiesPage {
   yearsInvolvedField: Locator;
   leadershipRolesField: Locator;
   descriptionOfInvolvement: Locator;
-  nextPage: Locator;
+  nextPageButton: Locator;
+  addCompletedEntry: Locator;
   errorFor1Entry: Locator;
 
   constructor(page: Page) {
@@ -21,8 +22,12 @@ export class ExtracurricularActivitiesPage {
     });
     this.leadershipRolesField = page.getByPlaceholder("Long Input").first();
     this.descriptionOfInvolvement = page.getByPlaceholder("Long Input").last();
-    this.nextPage = page.getByText("Next Page");
+    this.nextPageButton = page.getByRole("button", { name: "Next Page" });
     this.errorFor1Entry = page.locator("[class$=error]");
+    this.addCompletedEntry = page.getByRole("button", {
+      name: "Add",
+      exact: true,
+    });
   }
 
   async addEntry(
@@ -36,7 +41,7 @@ export class ExtracurricularActivitiesPage {
     await this.fillYearsInvolved(number);
     await this.fillLeadershipRoles(roles);
     await this.fillInvolvementDescription(description);
-    await this.page.getByRole("button", { name: "Add", exact: true }).click();
+    await this.completeEntry();
   }
 
   async addNewEntry() {
@@ -45,6 +50,7 @@ export class ExtracurricularActivitiesPage {
   }
 
   async fillextracurricularActivity(activity: string) {
+    await this.extracurricularActivityName.waitFor({ state: "visible" });
     await this.extracurricularActivityName.fill(activity);
   }
 
@@ -57,17 +63,22 @@ export class ExtracurricularActivitiesPage {
     await this.leadershipRolesField.fill(roles);
   }
 
-  async fillInvolvementDescription(description) {
+  async fillInvolvementDescription(description: string) {
     await this.descriptionOfInvolvement.fill(description);
   }
 
   async nextPageClick() {
-    await this.nextPage.click();
+    await this.nextPageButton.click();
   }
 
   async validate2entriesRequired() {
     await expect(this.errorFor1Entry).toContainText(
       "Please add at least 2 entries"
     );
+  }
+
+  async completeEntry() {
+    await this.addCompletedEntry.scrollIntoViewIfNeeded();
+    await this.addCompletedEntry.click();
   }
 }

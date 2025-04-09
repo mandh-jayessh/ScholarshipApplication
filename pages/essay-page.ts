@@ -10,6 +10,7 @@ export class EssayPage {
   essayAnimalInputBox: Locator;
   essaySchoolInputBox: Locator;
   essayOtherInputBox: Locator;
+  nextPageButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -30,6 +31,7 @@ export class EssayPage {
     this.essayOtherInputBox = page.getByRole("textbox", {
       name: "Provide an essay about any topic",
     });
+    this.nextPageButton = this.page.getByRole("button", { name: "Next Page" })
     // this.essayOtherInputBox = page.locator('//*[text()="Provide an essay about any topic"]/following-sibling::div[contains(@class, "Textarea-wrapper")]');
   }
 
@@ -86,5 +88,9 @@ export class EssayPage {
     await expect(this.essayOtherInputBox).toHaveCount(1);
     await this.otherCheckbox.uncheck();
     await expect(this.otherCheckbox).not.toBeChecked();
+  }
+
+  async nextPageClick() {
+    await this.nextPageButton.click();
   }
 }

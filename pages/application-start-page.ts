@@ -7,7 +7,7 @@ export class ApplicationStartPage {
   cityField: Locator;
   zipcodeField: Locator;
   countryField: Locator;
-  nextPage: Locator;
+  nextPageButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -18,7 +18,7 @@ export class ApplicationStartPage {
     this.cityField = page.getByPlaceholder("Enter your city");
     this.zipcodeField = page.getByPlaceholder("Enter your zip code");
     this.countryField = page.getByPlaceholder("Enter your country");
-    this.nextPage = page.getByText("Next Page"); //span:has-text("Next Page")
+    this.nextPageButton = page.getByRole("button", { name: "Next Page" })
   }
 
   async fillUpDetails(
@@ -33,7 +33,6 @@ export class ApplicationStartPage {
     await this.fillCity(city);
     await this.fillZipcode(zip);
     await this.fillCountry(country);
-    await this.nextPage.click();
   }
 
   async fillStreetAddress(address: string) {
@@ -56,5 +55,9 @@ export class ApplicationStartPage {
   async fillCountry(country: string) {
     await this.countryField.click();
     await this.page.getByRole("option", { name: country }).click();
+  }
+
+  async nextPageClick() {
+    await this.nextPageButton.click();
   }
 }

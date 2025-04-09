@@ -36,9 +36,7 @@ test.beforeEach("Register the User", async ({ page }) => {
   }
 });
 
-test("Complete the Application for SDET Scholarship Program", async ({
-  page,
-}) => {
+test("Application for SDET Scholarship Program", async ({ page }) => {
   const applicationStart = new ApplicationStartPage(page);
   const curricularActivity = new ExtracurricularActivitiesPage(page);
   const highSchoolInfo = new HighSchoolInfoPage(page);
@@ -52,6 +50,7 @@ test("Complete the Application for SDET Scholarship Program", async ({
     testData.userAddress.zip,
     testData.userAddress.country
   );
+  await applicationStart.nextPageClick();
   await curricularActivity.addEntry(
     testData.curricularActivities[1].activityName,
     testData.curricularActivities[1].hoursPerWeek,
@@ -94,16 +93,17 @@ test("Complete the Application for SDET Scholarship Program", async ({
     testData.essays.essay1,
     testData.essays.essay2
   );
-  await curricularActivity.nextPageClick();
-  await page.pause();
+  await essay.nextPageClick();
+  await reviewApplication.reviewPage1Contents();
+  await reviewApplication.reviewCurricularPageContents();
+  await reviewApplication.reviewhighSchoolInfoPageContents();
+  await reviewApplication.reviewEssayPageContents();
+  await reviewApplication.submitApplication();
 });
 
-test.afterEach(
-  "Close Everything and Log Test Status",
-  async ({ page }, testInfo) => {
-    await page.close();
-    console.log(
-      `Test: "${testInfo.title}" finished with status ${testInfo.status}`
-    );
-  }
-);
+test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
+  await page.close();
+  console.log(
+    `Test: "${testInfo.title}" finished with status ${testInfo.status}`
+  );
+});

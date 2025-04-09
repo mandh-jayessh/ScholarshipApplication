@@ -12,6 +12,7 @@ export class HighSchoolInfoPage {
   calendarIcon: Locator;
   graduationYear: Locator;
   uploadFileButton: Locator;
+  nextPageButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -27,6 +28,7 @@ export class HighSchoolInfoPage {
     this.calendarIcon = page.locator("[class$=-DateInput-section]");
     this.graduationYear = page.getByPlaceholder("Enter a date");
     this.uploadFileButton = page.getByText("Upload File");
+    this.nextPageButton = this.page.getByRole("button", { name: "Next Page" })
   }
 
   async fillUpSchoolDetails(
@@ -91,5 +93,9 @@ export class HighSchoolInfoPage {
     await this.page
       .getByRole("button", { name: "My School Transcript.pdf" })
       .waitFor({ state: "visible" });
+  }
+
+  async nextPageClick() {
+    await this.nextPageButton.click();
   }
 }

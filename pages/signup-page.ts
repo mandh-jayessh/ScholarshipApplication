@@ -64,7 +64,10 @@ export class SignupPage {
     await this.confirmCheckbox.check();
     await expect(this.confirmCheckbox).toBeChecked();
   }
+  
   async clickSubmit() {
+    await this.submitButton.scrollIntoViewIfNeeded()
+    await expect(this.submitButton).toBeEnabled()
     await this.submitButton.click();
   }
 }

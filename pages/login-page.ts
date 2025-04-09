@@ -25,13 +25,17 @@ export class LoginPage {
 
   async clickNext() {
     await this.nextButton.click();
-    await this.emailField.waitFor({ state: "detached" });
+    // await this.emailField.waitFor({ state: "detached" });
   }
 
   async fillPasswordAndSignIn(password: string) {
+    await this.fillPassword(password);
+    await this.clickSignin();
+  }
+
+  async fillPassword(password: string) {
     await expect(this.passwordField).toBeEditable();
     await this.passwordField.fill(password);
-    await this.clickSignin()
   }
 
   async clickSignin() {

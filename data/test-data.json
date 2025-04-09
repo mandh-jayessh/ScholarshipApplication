@@ -1,15 +1,15 @@
 {
   "userDetails": {
-    "firstName": "Namaste",
-    "lastName": "London",
+    "firstName": "Mark",
+    "lastName": "Longfellow",
     "mobilePhone": "5555555555",
-    "password": "1Oaktreecloud!"
+    "password": "1PalasiaSquare!"
   },
   "userAddress": {
-    "streetAddress": "4389",
-    "city": "Fort Myers",
+    "streetAddress": "H.N 4389",
+    "city": "Ft Lauderdale",
     "state": "Florida",
-    "zip": "33910",
+    "zip": "33311",
     "country": "United States of America"
   },
   "curricularActivities": [
@@ -17,13 +17,13 @@
       "activityName": "Yoga",
       "hoursPerWeek": 1,
       "description": "Yoga is perfomed",
-      "achievements": "Health  Benefits"
+      "achievements": "Health Benefits"
     },
     {
       "activityName": "Singing",
       "hoursPerWeek": 2,
       "description": "Songs are sung",
-      "achievements": "Lyrics are easy to memorise"
+      "achievements": "Lyrics are easy to memorise now"
     },
     {
       "activityName": "Dancing",
@@ -39,11 +39,11 @@
     }
   ],
   "highSchoolInfo": {
-    "schoolName": "International School",
-    "schoolStreet": "324",
-    "city": "Fort Myer",
+    "schoolName": "International School of Excellence",
+    "schoolStreet": "4096 George Avenue",
+    "city": "Gosport",
     "state": "Alabama",
-    "zip": 32132,
+    "zip": 36482,
     "grade": 10,
     "graduationYear": 2020
   },
