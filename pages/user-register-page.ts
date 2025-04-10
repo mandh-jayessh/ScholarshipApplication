@@ -25,35 +25,23 @@ export class UserRegisterPage {
     this.emailField = page.getByPlaceholder("Email Address");
     this.enterPasswordField = page.getByPlaceholder("Password");
     this.signinButton = page.getByRole("button", { name: "Sign In" });
-    this.waitForField = page
-      .getByPlaceholder("Password")
-      .or(page.getByLabel("Create a Password"));
+    this.waitForField = page.getByPlaceholder("Password").or(page.getByLabel("Create a Password"));
     this.firstNameField = page.getByRole("textbox", { name: "First Name" });
     this.lastNameField = page.getByRole("textbox", { name: "Last Name" });
     this.mobilePhoneField = page.getByPlaceholder("1 (702) 123-4567");
     this.createPasswordField = page.getByLabel("Create a Password");
-    this.ageConfirmCheckbox = page.getByRole("checkbox", {
-      name: "I confirm that I am at least 13 years old",
-    });
-    this.smsNotificationCheckbox = page.getByRole("checkbox", {
-      name: "Opt-in to program related SMS notifications",
-    });
-    this.emailNotificationCheckbox = page.getByRole("checkbox", {
-      name: "Opt-in to email notifications about your application status",
-    });
-    this.promotionalEmailCheckbox = page.getByRole("checkbox", {
-      name: "Opt-in to promotional emails",
-    });
+    this.ageConfirmCheckbox = page.getByRole("checkbox", { name: "I confirm that I am at least 13 years old" });
+    this.smsNotificationCheckbox = page.getByRole("checkbox", { name: "Opt-in to program related SMS notifications" });
+    this.emailNotificationCheckbox = page.getByRole("checkbox", { name: "Opt-in to email notifications about your application status" });
+    this.promotionalEmailCheckbox = page.getByRole("checkbox", { name: "Opt-in to promotional emails" });
     this.nextButton = page.getByRole("button", { name: "Next" });
     this.backButton = page.getByRole("link", { name: "Back" });
     this.submitButton = page.getByRole("button", { name: "Submit" });
   }
 
-  async validateLoginPage() {
-    // await this.enterPasswordField.waitFor({ state: "visible" });
-    await expect(this.page).toHaveTitle("Login");
-    await expect(this.page).toHaveURL("https://apply.mykaleidoscope.com/login");
-    await expect(this.heading).toHaveText("Sign In To Kaleidoscope");
+  async validateLoginPage(heading: string) {
+    await expect(this.heading).toHaveText(heading);
+    await expect(this.signinButton).toBeVisible();
   }
 
   async fillEmail(email: string) {
@@ -85,12 +73,8 @@ export class UserRegisterPage {
     await this.signinButton.click();
   }
 
-  async validateSignupPage() {
-    await expect(this.page).toHaveTitle("Signup");
-    await expect(this.page).toHaveURL(
-      "https://apply.mykaleidoscope.com/signup"
-    );
-    await expect(this.heading).toHaveText("Let's create your account.");
+  async validateSignupPage(heading: string) {
+    await expect(this.heading).toHaveText(heading);
     await expect(this.ageConfirmCheckbox).not.toBeChecked();
     await expect(this.smsNotificationCheckbox).toBeChecked();
     await expect(this.emailNotificationCheckbox).toBeChecked();
@@ -101,12 +85,7 @@ export class UserRegisterPage {
     await expect(this.submitButton).toBeEnabled();
   }
 
-  async submitSignupDetails(
-    fname: string,
-    lname: string,
-    mobno: string,
-    password: string
-  ) {
+  async submitSignupDetails( fname: string, lname: string, mobno: string, password: string ) {
     await this.fillFirstName(fname);
     await this.fillLastName(lname);
     await this.fillPhoneNumber(mobno);

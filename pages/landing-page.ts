@@ -22,10 +22,10 @@ export class SdetScholarshipLandingPage {
     );
   }
 
-  async validatelandingPage() {
+  async validatelandingPage(heading: string) {
     await expect(this.page).toHaveTitle("Kaleidoscope - SDET Scholarship");
     await expect(this.logo).toBeVisible();
-    await expect(this.heading).toHaveText("SDET Scholarship");
+    await expect(this.heading).toHaveText(heading);
   }
 
   async loginApply() {

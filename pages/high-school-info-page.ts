@@ -31,25 +31,18 @@ export class HighSchoolInfoPage {
     this.calendarIcon = page.locator("[class$=-DateInput-section]");
     this.graduationYear = page.getByPlaceholder("Enter a date");
     this.uploadFileButton = page.getByText("Upload File");
-    this.deleteUploadedFileButton = page.getByRole("button", {
-      name: "delete",
-    });
+    this.deleteUploadedFileButton = page.getByRole("button", { name: "delete" });
     this.nextPageButton = page.getByRole("button", { name: "Next Page" });
   }
 
-  async validateHighSchoolInfoPage() {
+  async validateHighSchoolInfoPage(heading: string) {
     await this.schoolName.waitFor({ state: "visible" });
-    await expect(this.heading).toHaveText("High School Information");
+    await expect(this.heading).toHaveText(heading);
   }
 
   async fillUpSchoolDetails(
-    name: string,
-    address: string,
-    city: string,
-    state: string,
-    zip: number,
-    gpa: number,
-    year: number
+    name: string, address: string, city: string,
+    state: string, zip: number, gpa: number, year: number
   ) {
     await this.fillSchoolName(name);
     await this.fillStreetAddress(address);
@@ -100,15 +93,15 @@ export class HighSchoolInfoPage {
   }
 
   async uploadFile() {
-    const filePath = "transcriptToUpload/My School Transcript.pdf"
+    const filePath = "transcriptToUpload/My School Transcript.pdf";
     const fileChooserPromise = this.page.waitForEvent("filechooser");
-    await this.clickUploadFileButton()
+    await this.clickUploadFileButton();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(filePath);
     await this.deleteUploadedFileButton.waitFor({ state: "visible" });
   }
 
-  async clickUploadFileButton(){
+  async clickUploadFileButton() {
     await expect(this.uploadFileButton).toBeEnabled();
     await this.uploadFileButton.click();
   }

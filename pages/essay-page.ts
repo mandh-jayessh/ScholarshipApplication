@@ -20,24 +20,16 @@ export class EssayPage {
     this.animalsCheckbox = page.getByRole("checkbox", { name: "Animals" });
     this.schoolCheckbox = page.getByRole("checkbox", { name: "School" });
     this.otherCheckbox = page.getByRole("checkbox", { name: "Other" });
-    this.essayCarsInputBox = page.getByRole("textbox", {
-      name: "Essay about Cars",
-    });
-    this.essayAnimalInputBox = page.getByRole("textbox", {
-      name: "Essay about Animals",
-    });
-    this.essaySchoolInputBox = page.getByRole("textbox", {
-      name: "Essay about School",
-    });
-    this.essayOtherInputBox = page.getByRole("textbox", {
-      name: "Provide an essay about any topic",
-    });
+    this.essayCarsInputBox = page.getByRole("textbox", { name: "Essay about Cars" });
+    this.essayAnimalInputBox = page.getByRole("textbox", { name: "Essay about Animals" });
+    this.essaySchoolInputBox = page.getByRole("textbox", { name: "Essay about School" });
+    this.essayOtherInputBox = page.getByRole("textbox", { name: "Provide an essay about any topic" });
     this.nextPageButton = page.getByRole("button", { name: "Next Page" });
   }
 
-  async validateEssayPage() {
+  async validateEssayPage(heading: string) {
     await this.otherCheckbox.waitFor({ state: "visible" });
-    await expect(this.heading).toHaveText("Essay");
+    await expect(this.heading).toHaveText(heading);
   }
 
   async validatePresenceOfEssayBoxes() {

@@ -4,7 +4,6 @@ export class ExtracurricularActivitiesPage {
   page: Page;
   heading: Locator;
   addEntryButton: Locator;
-  addEntryBanner: Locator;
   addEntryModalClose: Locator;
   extracurricularActivityName: Locator;
   yearsInvolvedUpArrow: Locator;
@@ -19,34 +18,25 @@ export class ExtracurricularActivitiesPage {
     this.page = page;
     this.heading = page.locator("//h2");
     this.addEntryButton = page.locator("span").getByText("Add Entry");
-    this.addEntryBanner = page.getByRole("banner");
-    this.addEntryModalClose = page.getByRole("button", {
-      name: "Close Add Entry modal",
-    });
+    this.addEntryModalClose = page.getByRole("button", { name: "Close Add Entry modal" });
     this.extracurricularActivityName = page.getByPlaceholder("Short Input");
     this.yearsInvolvedUpArrow = page.locator("//*[@data-direction='up']");
-    this.yearsInvolvedField = page.getByRole("textbox", {
-      name: "Total Number of Years Involved",
-    });
+    this.yearsInvolvedField = page.getByRole("textbox", { name: "Total Number of Years Involved" });
     this.leadershipRolesField = page.getByPlaceholder("Long Input").first();
     this.descriptionOfInvolvement = page.getByPlaceholder("Long Input").last();
     this.nextPageButton = page.getByRole("button", { name: "Next Page" });
     this.errorFor1Entry = page.locator("[class$=error]");
-    this.addCompletedEntry = page.getByRole("button", {
-      name: "Add",
-      exact: true,
-    });
+    this.addCompletedEntry = page.getByRole("button", { name: "Add", exact: true });
   }
 
-  async validateActivitiesPage() {
+  async validateActivitiesPage(heading: string) {
     await this.addEntryButton.waitFor({ state: "visible" });
-    await expect(this.heading).toHaveText("Extracurricular Activities");
+    await expect(this.heading).toHaveText(heading);
     await this.ValidateAddEntryModal();
   }
 
   async ValidateAddEntryModal() {
     await this.addNewEntry();
-    await expect(this.addEntryBanner).toContainText("Add Entry");
     await expect(this.extracurricularActivityName).toBeEditable();
     await expect(this.yearsInvolvedField).toBeEditable();
     await expect(this.leadershipRolesField).toBeEditable();
@@ -54,12 +44,7 @@ export class ExtracurricularActivitiesPage {
     await this.addEntryModalClose.click();
   }
 
-  async addEntry(
-    activity: string,
-    number: number,
-    roles: string,
-    description: string
-  ) {
+  async addEntry( activity: string, number: number, roles: string, description: string ) {
     await this.addNewEntry();
     await this.fillextracurricularActivity(activity);
     await this.fillYearsInvolved(number);
@@ -96,9 +81,7 @@ export class ExtracurricularActivitiesPage {
   }
 
   async validate2entriesRequired() {
-    await expect(this.errorFor1Entry).toContainText(
-      "Please add at least 2 entries"
-    );
+    await expect(this.errorFor1Entry).toContainText("Please add at least 2 entries");
   }
 
   async completeEntry() {

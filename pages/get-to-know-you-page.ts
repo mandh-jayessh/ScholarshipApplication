@@ -23,9 +23,9 @@ export class GetToKnowYouPage {
     this.nextPageButton = page.getByRole("button", { name: "Next Page" });
   }
 
-  async validateGetToKnowYouPage() {
+  async validateGetToKnowYouPage(heading: string) {
     await this.streetAddressField.waitFor({ state: "visible" });
-    await expect(this.heading).toHaveText("Lets get to know you!");
+    await expect(this.heading).toHaveText(heading);
   }
 
   async fillUpDetails(
