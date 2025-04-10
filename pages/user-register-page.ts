@@ -1,30 +1,37 @@
 import { Page, Locator, expect } from "@playwright/test";
 
-export class SignupPage {
+export class UserRegisterPage {
   page: Page;
   heading: Locator;
   emailField: Locator;
-  nextButton: Locator;
+  enterPasswordField: Locator;
+  signinButton: Locator;
+  waitForField: Locator;
   firstNameField: Locator;
   lastNameField: Locator;
   mobilePhoneField: Locator;
-  passwordField: Locator;
+  createPasswordField: Locator;
   ageConfirmCheckbox: Locator;
   smsNotificationCheckbox: Locator;
   emailNotificationCheckbox: Locator;
   promotionalEmailCheckbox: Locator;
+  nextButton: Locator;
   backButton: Locator;
   submitButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.locator("//h2");
-    this.emailField = page.getByLabel("Email Address");
-    this.nextButton = page.getByRole("button", { name: "Next" });
+    this.heading = page.getByRole("heading");
+    this.emailField = page.getByPlaceholder("Email Address");
+    this.enterPasswordField = page.getByPlaceholder("Password");
+    this.signinButton = page.getByRole("button", { name: "Sign In" });
+    this.waitForField = page
+      .getByPlaceholder("Password")
+      .or(page.getByLabel("Create a Password"));
     this.firstNameField = page.getByRole("textbox", { name: "First Name" });
     this.lastNameField = page.getByRole("textbox", { name: "Last Name" });
     this.mobilePhoneField = page.getByPlaceholder("1 (702) 123-4567");
-    this.passwordField = page.getByLabel("Create a Password");
+    this.createPasswordField = page.getByLabel("Create a Password");
     this.ageConfirmCheckbox = page.getByRole("checkbox", {
       name: "I confirm that I am at least 13 years old",
     });
@@ -37,8 +44,45 @@ export class SignupPage {
     this.promotionalEmailCheckbox = page.getByRole("checkbox", {
       name: "Opt-in to promotional emails",
     });
+    this.nextButton = page.getByRole("button", { name: "Next" });
     this.backButton = page.getByRole("link", { name: "Back" });
     this.submitButton = page.getByRole("button", { name: "Submit" });
+  }
+
+  async validateLoginPage() {
+    // await this.enterPasswordField.waitFor({ state: "visible" });
+    await expect(this.page).toHaveTitle("Login");
+    await expect(this.page).toHaveURL("https://apply.mykaleidoscope.com/login");
+    await expect(this.heading).toHaveText("Sign In To Kaleidoscope");
+  }
+
+  async fillEmail(email: string) {
+    await expect(this.emailField).toBeEditable();
+    await this.emailField.fill(email);
+  }
+
+  async clickNext() {
+    await expect(this.nextButton).toBeVisible();
+    await expect(this.nextButton).toBeEnabled();
+    await this.nextButton.click();
+  }
+
+  async waitForLoad() {
+    await this.waitForField.waitFor({ state: "visible" });
+  }
+
+  async enterPasswordAndSignIn(password: string) {
+    await this.enterPassword(password);
+    await this.clickSignin();
+  }
+
+  async enterPassword(password: string) {
+    await expect(this.enterPasswordField).toBeEditable();
+    await this.enterPasswordField.fill(password);
+  }
+
+  async clickSignin() {
+    await this.signinButton.click();
   }
 
   async validateSignupPage() {
@@ -63,11 +107,10 @@ export class SignupPage {
     mobno: string,
     password: string
   ) {
-    await expect(this.emailField).not.toBeEditable();
     await this.fillFirstName(fname);
     await this.fillLastName(lname);
     await this.fillPhoneNumber(mobno);
-    await this.fillPassword(password);
+    await this.createPassword(password);
     await this.checkConfirmCheckbox();
     await this.clickSubmit();
   }
@@ -87,9 +130,9 @@ export class SignupPage {
     await this.mobilePhoneField.fill(mobno);
   }
 
-  async fillPassword(password: string) {
-    await expect(this.passwordField).toBeEditable();
-    await this.passwordField.fill(password);
+  async createPassword(password: string) {
+    await expect(this.createPasswordField).toBeEditable();
+    await this.createPasswordField.fill(password);
   }
 
   async checkConfirmCheckbox() {

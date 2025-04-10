@@ -10,6 +10,8 @@ export class ReviewApplicationPage {
   application_section: Locator;
   documents_tab: Locator;
   documents_section: Locator;
+  editButtons: Locator;
+  continueApplicationLink: Locator;
   expandGetToKnow: Locator;
   expandCurricularActivities: Locator;
   expandHighSchoolInfo: Locator;
@@ -47,6 +49,10 @@ export class ReviewApplicationPage {
     this.application_section = page.locator("[id*='-panel-application']");
     this.documents_tab = page.getByRole("tab", { name: "Documents" });
     this.documents_section = page.locator("[id*='-panel-documents']");
+    this.editButtons = page.getByText("Edit");
+    this.continueApplicationLink = page.getByRole("link", {
+      name: "Continue Application",
+    });
     this.expandGetToKnow = page.getByRole("button", {
       name: "1.Lets get to know you! Edit",
     });
@@ -94,6 +100,8 @@ export class ReviewApplicationPage {
     await this.documents_tab.click();
     await expect(this.documents_section).toBeVisible();
     await this.application_tab.click();
+    await expect(this.editButtons).toHaveCount(4);
+    await expect(this.continueApplicationLink).toBeVisible();
     await expect(this.application_section).toBeVisible();
     await expect(this.submitButton).toBeVisible();
     await expect(this.printApplicationButton).toBeVisible();
@@ -108,7 +116,9 @@ export class ReviewApplicationPage {
     await this.openCloseSection(this.expandGetToKnow);
     await expect(this.firstName).toContainText(userData.firstName);
     await expect(this.lastName).toContainText(userData.lastName);
-    // await expect(this.email).toContainText(globalThis.email);
+    await expect(this.email).toContainText(globalThis.email, {
+      ignoreCase: true,
+    });
     await expect(this.userStreetAddress).toContainText(userData.streetAddress);
     await expect(this.userState).toContainText(userData.state);
     await expect(this.userCity).toContainText(userData.city);

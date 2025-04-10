@@ -1,40 +1,41 @@
 import { test, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SdetScholarshipLandingPage } from "../pages/landing-page";
-import { LoginPage } from "../pages/login-page";
-import { SignupPage } from "../pages/signup-page";
+import { UserRegisterPage } from "../pages/user-register-page"
 import { GetToKnowYouPage } from "../pages/get-to-know-you-page";
 import { ExtracurricularActivitiesPage } from "../pages/extracurricular-activities-page";
 import { HighSchoolInfoPage } from "../pages/high-school-info-page";
 import { EssayPage } from "../pages/essay-page";
 import { ReviewApplicationPage } from "../pages/review-application-page";
+import { SubmittedApplicationPage } from "../pages/submitted-application-page";
 import userData from "../data/user-details.json";
 import schoolData from "../data/high-school-info.json";
 import activityData from "../data/curricular-activities.json";
 import essayData from "../data/essays.json";
-
+test.setTimeout(10000000)
 test.beforeEach("Register the User", async ({ page }) => {
   const landing = new SdetScholarshipLandingPage(page);
-  const login = new LoginPage(page);
-  const signup = new SignupPage(page);
+  const userRegister = new UserRegisterPage(page)
   globalThis.email = faker.internet.email();
 
   await landing.goto();
   await landing.validatelandingPage();
   await landing.loginApply();
-  await login.fillEmail(globalThis.email);
+  await userRegister.fillEmail(globalThis.email)
   console.log(`Email: ${globalThis.email}`);
-  await login.clickNext();
+  await userRegister.clickNext()
+  await userRegister.waitForLoad()
   if ((await page.title()) === "Signup") {
-    await signup.submitSignupDetails(
+    await userRegister.validateSignupPage()
+    await userRegister.submitSignupDetails(
       userData.firstName,
       userData.lastName,
       userData.mobilePhone,
       userData.password
     );
   } else if ((await page.title()) === "Login") {
-    await login.validateloginPage();
-    await login.fillPasswordAndSignIn(userData.password);
+    await userRegister.validateLoginPage();
+    await userRegister.enterPasswordAndSignIn(userData.password);
   }
 });
 
@@ -44,6 +45,7 @@ test("Application for SDET Scholarship Program", async ({ page }) => {
   const highSchoolInfo = new HighSchoolInfoPage(page);
   const essay = new EssayPage(page);
   const reviewApplication = new ReviewApplicationPage(page);
+  const submittedApplication = new SubmittedApplicationPage(page)
 
   await getToKnowYou.validateGetToKnowYouPage();
   await getToKnowYou.fillUpDetails(
@@ -87,6 +89,7 @@ test("Application for SDET Scholarship Program", async ({ page }) => {
   await essay.validatePresenceOfEssayBoxes();
   await essay.fillupAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
   await essay.nextPageClick();
+  await page.pause()
   await reviewApplication.validateReviewPage();
   await reviewApplication.reviewPage1Contents();
   await reviewApplication.reviewCurricularPageContents();
@@ -96,6 +99,9 @@ test("Application for SDET Scholarship Program", async ({ page }) => {
   console.log(`URL: ${url}`);
   await reviewApplication.submitApplication();
   await page.goto(url);
+  await page.pause()
+  await submittedApplication.validateNoEditing();
+  await page.pause()
 });
 
 test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
