@@ -25,6 +25,7 @@ test.describe("Kaleidoscope", () => {
   let essay: EssayPage;
   let reviewApplication: ReviewApplicationPage;
   let submittedApplication: SubmittedApplicationPage;
+  let noOfRuns: number = 2;
 
   test.beforeEach("Register the User", async ({ page }) => {
     landing = new SdetScholarshipLandingPage(page);
@@ -50,15 +51,15 @@ test.describe("Kaleidoscope", () => {
     }
   });
 
-  for (let run = 0; run < 2; run++) {
-    test(`Fill Application - Run No. ${run + 1}`, async ({ page }) => {
+  for (let run = 1; run <= noOfRuns; run++) {
+    test(`Fill Application - Run No. ${run}`, async ({ page }) => {
       getToKnowYou = new GetToKnowYouPage(page);
       curricularActivity = new ExtracurricularActivitiesPage(page);
       highSchoolInfo = new HighSchoolInfoPage(page);
       essay = new EssayPage(page);
       reviewApplication = new ReviewApplicationPage(page);
       submittedApplication = new SubmittedApplicationPage(page);
-
+      // Fill Get to Know Page
       await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
       await getToKnowYou.fillUpDetails(
         userData.streetAddress, userData.state, userData.city,
@@ -66,13 +67,16 @@ test.describe("Kaleidoscope", () => {
       );
       await getToKnowYou.nextPageClick();
 
+      // Fill Extra Curricular Activities Page
       await curricularActivity.validateActivitiesPage( headerData.ExtracurricularActivitiesPage );
       await curricularActivity.addEntry(
         activityData[0].activityName, activityData[0].yearsInvolved,
         activityData[0].description, activityData[0].achievements
       );
       await curricularActivity.nextPageClick();
+      // Validate that at least 2 Extracurricular Activities are required, when not providing enough.
       await curricularActivity.validate2entriesRequired();
+      // Finish page by providing 4 Activities(add 3 more as 1 is added earlier)
       for (let i = 1; i <= 3; i++) {
         await curricularActivity.addEntry(
           activityData[i].activityName, activityData[i].yearsInvolved, 
@@ -81,6 +85,7 @@ test.describe("Kaleidoscope", () => {
       }
       await curricularActivity.nextPageClick();
 
+      // Fill High School Info Page
       await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
       await highSchoolInfo.fillUpSchoolDetails(
         schoolData.schoolName, schoolData.schoolStreet,
@@ -89,22 +94,26 @@ test.describe("Kaleidoscope", () => {
       );
       await highSchoolInfo.nextPageClick();
 
+      // Fill Essay Page
       await essay.validateEssayPage(headerData.EssayPage);
       await essay.validatePresenceOfEssayBoxes();
       await essay.fillupAnimalsAndSchoolsEssays( essayData.essay1, essayData.essay2 );
       await essay.nextPageClick();
 
+      // Validate things in Review Page
       await reviewApplication.validateReviewPage();
       await reviewApplication.reviewUserContents();
       await reviewApplication.reviewCurricularPageContents();
       await reviewApplication.reviewhighSchoolInfoPageContents();
       await reviewApplication.reviewEssayPageContents();
+      // Capture the Page URL so it can be redirected back to after Submitting the Application.
       const url = page.url();
       console.log(`URL: ${url}`);
       await reviewApplication.submitApplication();
       await reviewApplication.confirmSubmission();
       await page.goto(url);
 
+      // Validate Editing is not allowed after Application has been submitted.
       await submittedApplication.validateNoEditing();
     });
   }
