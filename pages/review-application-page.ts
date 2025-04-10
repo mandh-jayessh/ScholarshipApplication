@@ -104,7 +104,7 @@ export class ReviewApplicationPage {
     await locator.click();
   }
 
-  async reviewPage1Contents() {
+  async reviewUserContents() {
     await this.openCloseSection(this.expandGetToKnow);
     await expect(this.firstName).toContainText(userData.firstName);
     await expect(this.lastName).toContainText(userData.lastName);

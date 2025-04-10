@@ -16,104 +16,103 @@ import activityData from "../data/test-data/curricular-activities.json";
 import essayData from "../data/test-data/essays.json";
 import headerData from "../data/validation-data/heading-data.json";
 
-test.beforeEach("Register the User", async ({ page }) => {
-  const landing = new SdetScholarshipLandingPage(page);
-  const userRegister = new UserRegisterPage(page);
-  globalThis.email = faker.internet.email();
+test.describe("Kaleidoscope", () => {
+  let landing: SdetScholarshipLandingPage;
+  let userRegister: UserRegisterPage;
+  let getToKnowYou: GetToKnowYouPage;
+  let curricularActivity: ExtracurricularActivitiesPage;
+  let highSchoolInfo: HighSchoolInfoPage;
+  let essay: EssayPage;
+  let reviewApplication: ReviewApplicationPage;
+  let submittedApplication: SubmittedApplicationPage;
 
-  await landing.goto();
-  await landing.validatelandingPage(headerData.LandingPage);
-  await landing.loginApply();
-  await userRegister.fillEmail(globalThis.email);
-  console.log(`Email: ${globalThis.email}`);
-  await userRegister.clickNext();
-  await userRegister.waitForLoad();
-  if ((await page.title()) === "Signup") {
-    await userRegister.validateSignupPage(headerData.SignUpPage);
-    await userRegister.submitSignupDetails(
-      userData.firstName,
-      userData.lastName,
-      userData.mobilePhone,
-      userData.password
-    );
-  } else if ((await page.title()) === "Login") {
-    await userRegister.validateLoginPage(headerData.LoginPage);
-    await userRegister.enterPasswordAndSignIn(userData.password);
-  }
-});
-for (let i = 0; i < 1; i++) {
-  test(`Application for SDET Scholarship Program - Run No. ${i + 1}`, async ({
-    page,
-  }) => {
-    const getToKnowYou = new GetToKnowYouPage(page);
-    const curricularActivity = new ExtracurricularActivitiesPage(page);
-    const highSchoolInfo = new HighSchoolInfoPage(page);
-    const essay = new EssayPage(page);
-    const reviewApplication = new ReviewApplicationPage(page);
-    const submittedApplication = new SubmittedApplicationPage(page);
+  test.beforeEach("Register the User", async ({ page }) => {
+    landing = new SdetScholarshipLandingPage(page);
+    userRegister = new UserRegisterPage(page);
+    globalThis.email = faker.internet.email();
 
-    await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
-    await getToKnowYou.fillUpDetails(
-      userData.streetAddress,
-      userData.state,
-      userData.city,
-      userData.zip,
-      userData.country
-    );
-    await getToKnowYou.nextPageClick();
-    await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
-    await curricularActivity.addEntry(
-      activityData[0].activityName,
-      activityData[0].yearsInvolved,
-      activityData[0].description,
-      activityData[0].achievements
-    );
-    await curricularActivity.nextPageClick();
-    await curricularActivity.validate2entriesRequired();
-    for (let i = 1; i <= 3; i++) {
-      await curricularActivity.addEntry(
-        activityData[i].activityName,
-        activityData[i].yearsInvolved,
-        activityData[i].description,
-        activityData[i].achievements
+    await landing.goto();
+    await landing.validatelandingPage(headerData.LandingPage);
+    await landing.loginApply();
+    await userRegister.fillEmail(globalThis.email);
+    console.log(`Email: ${globalThis.email}`);
+    await userRegister.clickNext();
+    await userRegister.waitForLoad();
+    if ((await page.title()) === "Signup") {
+      await userRegister.validateSignupPage(headerData.SignUpPage);
+      await userRegister.submitSignupDetails(
+        userData.firstName, userData.lastName,
+        userData.mobilePhone, userData.password
       );
+    } else if ((await page.title()) === "Login") {
+      await userRegister.validateLoginPage(headerData.LoginPage);
+      await userRegister.enterPasswordAndSignIn(userData.password);
     }
-    await curricularActivity.nextPageClick();
-    await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
-    await highSchoolInfo.fillUpSchoolDetails(
-      schoolData.schoolName,
-      schoolData.schoolStreet,
-      schoolData.city,
-      schoolData.state,
-      schoolData.zip,
-      schoolData.grade,
-      schoolData.graduationYear
-    );
-    await highSchoolInfo.nextPageClick();
-    await essay.validateEssayPage(headerData.EssayPage);
-    await essay.validatePresenceOfEssayBoxes();
-    await essay.fillupAnimalsAndSchoolsEssays(
-      essayData.essay1,
-      essayData.essay2
-    );
-    await essay.nextPageClick();
-    await reviewApplication.validateReviewPage();
-    await reviewApplication.reviewPage1Contents();
-    await reviewApplication.reviewCurricularPageContents();
-    await reviewApplication.reviewhighSchoolInfoPageContents();
-    await reviewApplication.reviewEssayPageContents();
-    const url = page.url();
-    console.log(`URL: ${url}`);
-    await reviewApplication.submitApplication();
-    await reviewApplication.confirmSubmission();
-    await page.goto(url);
-    await submittedApplication.validateNoEditing();
   });
-}
 
-test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
-  await page.close();
-  console.log(
-    `Test: "${testInfo.title}" finished with status ${testInfo.status}`
-  );
+  for (let run = 0; run < 2; run++) {
+    test(`Fill Application - Run No. ${run + 1}`, async ({ page }) => {
+      getToKnowYou = new GetToKnowYouPage(page);
+      curricularActivity = new ExtracurricularActivitiesPage(page);
+      highSchoolInfo = new HighSchoolInfoPage(page);
+      essay = new EssayPage(page);
+      reviewApplication = new ReviewApplicationPage(page);
+      submittedApplication = new SubmittedApplicationPage(page);
+
+      await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
+      await getToKnowYou.fillUpDetails(
+        userData.streetAddress, userData.state, userData.city,
+        userData.zip, userData.country
+      );
+      await getToKnowYou.nextPageClick();
+
+      await curricularActivity.validateActivitiesPage( headerData.ExtracurricularActivitiesPage );
+      await curricularActivity.addEntry(
+        activityData[0].activityName, activityData[0].yearsInvolved,
+        activityData[0].description, activityData[0].achievements
+      );
+      await curricularActivity.nextPageClick();
+      await curricularActivity.validate2entriesRequired();
+      for (let i = 1; i <= 3; i++) {
+        await curricularActivity.addEntry(
+          activityData[i].activityName, activityData[i].yearsInvolved, 
+          activityData[i].description, activityData[i].achievements
+        );
+      }
+      await curricularActivity.nextPageClick();
+
+      await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
+      await highSchoolInfo.fillUpSchoolDetails(
+        schoolData.schoolName, schoolData.schoolStreet,
+        schoolData.city, schoolData.state, schoolData.zip,
+        schoolData.grade, schoolData.graduationYear
+      );
+      await highSchoolInfo.nextPageClick();
+
+      await essay.validateEssayPage(headerData.EssayPage);
+      await essay.validatePresenceOfEssayBoxes();
+      await essay.fillupAnimalsAndSchoolsEssays( essayData.essay1, essayData.essay2 );
+      await essay.nextPageClick();
+
+      await reviewApplication.validateReviewPage();
+      await reviewApplication.reviewUserContents();
+      await reviewApplication.reviewCurricularPageContents();
+      await reviewApplication.reviewhighSchoolInfoPageContents();
+      await reviewApplication.reviewEssayPageContents();
+      const url = page.url();
+      console.log(`URL: ${url}`);
+      await reviewApplication.submitApplication();
+      await reviewApplication.confirmSubmission();
+      await page.goto(url);
+
+      await submittedApplication.validateNoEditing();
+    });
+  }
+
+  test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
+    await page.close();
+    console.log(
+      `Test: "${testInfo.title}" finished with status ${testInfo.status}`
+    );
+  });
 });

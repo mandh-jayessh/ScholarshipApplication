@@ -81,7 +81,8 @@ export class ExtracurricularActivitiesPage {
   }
 
   async validate2entriesRequired() {
-    await expect(this.errorFor1Entry).toContainText("Please add at least 2 entries");
+    const minEntryError: string = "Please add at least 2 entries"
+    await expect(this.errorFor1Entry).toContainText(minEntryError);
   }
 
   async completeEntry() {
