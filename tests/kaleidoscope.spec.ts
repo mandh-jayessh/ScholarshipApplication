@@ -67,7 +67,6 @@ test.describe("Kaleidoscope", () => {
   test(`3. Fill 'Extracurricular Activities' Page - Run No: ${run}`, async () => {
     const curricularActivity = new ExtracurricularActivitiesPage(page);
     await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
-    await page.pause()
     await curricularActivity.addEntry(
       activityData[0].activityName, activityData[0].yearsInvolved,
       activityData[0].description, activityData[0].achievements
@@ -109,7 +108,7 @@ test.describe("Kaleidoscope", () => {
     await reviewApplication.reviewCurricularPageContents();
     await reviewApplication.reviewHighSchoolInfoPageContents();
     await reviewApplication.reviewEssayPageContents();
-    
+
     const url = page.url();
     console.log(`URL: ${url}`);
     await reviewApplication.submitApplication();
