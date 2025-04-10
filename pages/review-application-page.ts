@@ -144,7 +144,7 @@ export class ReviewApplicationPage {
     await this.openCloseSection(this.expandCurricularActivities);
   }
 
-  async reviewhighSchoolInfoPageContents() {
+  async reviewHighSchoolInfoPageContents() {
     await this.openCloseSection(this.expandHighSchoolInfo);
     await expect(this.schoolName).toContainText(schoolData.schoolName);
     await expect(this.schoolstreet.first()).toContainText(schoolData.schoolStreet);
