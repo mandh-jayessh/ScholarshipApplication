@@ -45,10 +45,8 @@ test.describe("Kaleidoscope", () => {
     if ((await page.title()) === "Signup") {
       await userRegister.validateSignupPage(headerData.SignUpPage);
       await userRegister.submitSignupDetails(
-        userData.firstName,
-        userData.lastName,
-        userData.mobilePhone,
-        userData.password
+        userData.firstName, userData.lastName,
+        userData.mobilePhone, userData.password
       );
     } else if ((await page.title()) === "Login") {
       await userRegister.validateLoginPage(headerData.LoginPage);
@@ -60,11 +58,8 @@ test.describe("Kaleidoscope", () => {
     const getToKnowYou = new GetToKnowYouPage(page);
     await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
     await getToKnowYou.fillUpDetails(
-      userData.streetAddress,
-      userData.state,
-      userData.city,
-      userData.zip,
-      userData.country
+      userData.streetAddress, userData.state, userData.city,
+      userData.zip, userData.country
     );
     await getToKnowYou.nextPageClick();
   });
@@ -74,19 +69,15 @@ test.describe("Kaleidoscope", () => {
     await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
     await page.pause()
     await curricularActivity.addEntry(
-      activityData[0].activityName,
-      activityData[0].yearsInvolved,
-      activityData[0].description,
-      activityData[0].achievements
+      activityData[0].activityName, activityData[0].yearsInvolved,
+      activityData[0].description, activityData[0].achievements
     );
     await curricularActivity.nextPageClick();
     await curricularActivity.validate2entriesRequired();
     for (let i = 1; i < 4; i++) {
       await curricularActivity.addEntry(
-        activityData[i].activityName,
-        activityData[i].yearsInvolved,
-        activityData[i].description,
-        activityData[i].achievements
+        activityData[i].activityName, activityData[i].yearsInvolved,
+        activityData[i].description, activityData[i].achievements
       );
     }
     await curricularActivity.nextPageClick();
@@ -96,13 +87,9 @@ test.describe("Kaleidoscope", () => {
     const highSchoolInfo = new HighSchoolInfoPage(page);
     await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
     await highSchoolInfo.fillUpSchoolDetails(
-      schoolData.schoolName,
-      schoolData.schoolStreet,
-      schoolData.city,
-      schoolData.state,
-      schoolData.zip,
-      schoolData.grade,
-      schoolData.graduationYear
+      schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
+      schoolData.state, schoolData.zip,
+      schoolData.grade, schoolData.graduationYear
     );
     await highSchoolInfo.nextPageClick();
   });
@@ -122,11 +109,12 @@ test.describe("Kaleidoscope", () => {
     await reviewApplication.reviewCurricularPageContents();
     await reviewApplication.reviewHighSchoolInfoPageContents();
     await reviewApplication.reviewEssayPageContents();
+    
     const url = page.url();
-      console.log(`URL: ${url}`);
-      await reviewApplication.submitApplication();
-      await reviewApplication.confirmSubmission();
-      await page.goto(url);
+    console.log(`URL: ${url}`);
+    await reviewApplication.submitApplication();
+    await reviewApplication.confirmSubmission();
+    await page.goto(url);
   });
 
   test(`7. Submit Application - Run No: ${run}`, async () => {
