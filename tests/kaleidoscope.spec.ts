@@ -30,7 +30,9 @@ test.describe("Kaleidoscope", () => {
     globalThis.email = faker.internet.email();
     console.log(`Generated Email: ${globalThis.email}`);
   });
-  for (let run = 1; noOfRuns <= 2; run++) {
+
+  for (let run = 1; run <= noOfRuns; run++) {
+    
   test(`1. Register User - Run No: ${run}`, async () => {
     const landing = new SdetScholarshipLandingPage(page);
     const userRegister = new UserRegisterPage(page);
@@ -101,27 +103,27 @@ test.describe("Kaleidoscope", () => {
     await essay.nextPageClick();
   });
 
-  test(`6. Review Application ${run}`, async () => {
-    const reviewApplication = new ReviewApplicationPage(page);
-    await reviewApplication.validateReviewPage();
-    await reviewApplication.reviewUserContents();
-    await reviewApplication.reviewCurricularPageContents();
-    await reviewApplication.reviewHighSchoolInfoPageContents();
-    await reviewApplication.reviewEssayPageContents();
+    test(`6. Review Application ${run}`, async () => {
+      const reviewApplication = new ReviewApplicationPage(page);
+      await reviewApplication.validateReviewPage();
+      await reviewApplication.reviewUserContents();
+      await reviewApplication.reviewCurricularPageContents();
+      await reviewApplication.reviewHighSchoolInfoPageContents();
+      await reviewApplication.reviewEssayPageContents();
 
-    const url = page.url();
-    console.log(`URL: ${url}`);
-    await reviewApplication.submitApplication();
-    await reviewApplication.confirmSubmission();
-    await page.goto(url);
-  });
+      const url = page.url();
+      console.log(`URL: ${url}`);
+      await reviewApplication.submitApplication();
+      await reviewApplication.confirmSubmission();
+      await page.goto(url);
+    });
 
-  test(`7. Submit Application - Run No: ${run}`, async () => {
-    const submittedApplication = new SubmittedApplicationPage(page);
-    await submittedApplication.validateNoEditing();
-    console.log("Application submitted successfully");
-  });
-}
+    test(`7. Submit Application - Run No: ${run}`, async () => {
+      const submittedApplication = new SubmittedApplicationPage(page);
+      await submittedApplication.validateNoEditing();
+      console.log("Application submitted successfully");
+    });
+  }
 
   test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
     await page.close();
