@@ -32,76 +32,76 @@ test.describe("Kaleidoscope", () => {
   });
 
   for (let run = 1; run <= noOfRuns; run++) {
-    
-  test(`1. Register User - Run No: ${run}`, async () => {
-    const landing = new SdetScholarshipLandingPage(page);
-    const userRegister = new UserRegisterPage(page);
 
-    await landing.goto();
-    await landing.validatelandingPage(headerData.LandingPage);
-    await landing.loginApply();
-    await userRegister.fillEmail(globalThis.email);
-    await userRegister.clickNext();
-    await userRegister.waitForLoad();
+    test(`1. Register User - Run No: ${run}`, async () => {
+      const landing = new SdetScholarshipLandingPage(page);
+      const userRegister = new UserRegisterPage(page);
 
-    if ((await page.title()) === "Signup") {
-      await userRegister.validateSignupPage(headerData.SignUpPage);
-      await userRegister.submitSignupDetails(
-        userData.firstName, userData.lastName,
-        userData.mobilePhone, userData.password
+      await landing.goto();
+      await landing.validatelandingPage(headerData.LandingPage);
+      await landing.loginApply();
+      await userRegister.fillEmail(globalThis.email);
+      await userRegister.clickNext();
+      await userRegister.waitForLoad();
+
+      if ((await page.title()) === "Signup") {
+        await userRegister.validateSignupPage(headerData.SignUpPage);
+        await userRegister.submitSignupDetails(
+          userData.firstName, userData.lastName,
+          userData.mobilePhone, userData.password
+        );
+      } else if ((await page.title()) === "Login") {
+        await userRegister.validateLoginPage(headerData.LoginPage);
+        await userRegister.enterPasswordAndSignIn(userData.password);
+      }
+    });
+
+    test(`2. Fill 'Get to Know You' Page - Run No: ${run}`, async () => {
+      const getToKnowYou = new GetToKnowYouPage(page);
+      await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
+      await getToKnowYou.fillUpDetails(
+        userData.streetAddress, userData.state, userData.city,
+        userData.zip, userData.country
       );
-    } else if ((await page.title()) === "Login") {
-      await userRegister.validateLoginPage(headerData.LoginPage);
-      await userRegister.enterPasswordAndSignIn(userData.password);
-    }
-  });
+      await getToKnowYou.nextPageClick();
+    });
 
-  test(`2. Fill 'Get to Know You' Page - Run No: ${run}`, async () => {
-    const getToKnowYou = new GetToKnowYouPage(page);
-    await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
-    await getToKnowYou.fillUpDetails(
-      userData.streetAddress, userData.state, userData.city,
-      userData.zip, userData.country
-    );
-    await getToKnowYou.nextPageClick();
-  });
-
-  test(`3. Fill 'Extracurricular Activities' Page - Run No: ${run}`, async () => {
-    const curricularActivity = new ExtracurricularActivitiesPage(page);
-    await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
-    await curricularActivity.addEntry(
-      activityData[0].activityName, activityData[0].yearsInvolved,
-      activityData[0].description, activityData[0].achievements
-    );
-    await curricularActivity.nextPageClick();
-    await curricularActivity.validate2entriesRequired();
-    for (let i = 1; i < 4; i++) {
+    test(`3. Fill 'Extracurricular Activities' Page - Run No: ${run}`, async () => {
+      const curricularActivity = new ExtracurricularActivitiesPage(page);
+      await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
       await curricularActivity.addEntry(
-        activityData[i].activityName, activityData[i].yearsInvolved,
-        activityData[i].description, activityData[i].achievements
+        activityData[0].activityName, activityData[0].yearsInvolved,
+        activityData[0].description, activityData[0].achievements
       );
-    }
-    await curricularActivity.nextPageClick();
-  });
+      await curricularActivity.nextPageClick();
+      await curricularActivity.validate2entriesRequired();
+      for (let i = 1; i < 4; i++) {
+        await curricularActivity.addEntry(
+          activityData[i].activityName, activityData[i].yearsInvolved,
+          activityData[i].description, activityData[i].achievements
+        );
+      }
+      await curricularActivity.nextPageClick();
+    });
 
-  test(`4. Fill 'High School Info' Page - Run No: ${run}`, async () => {
-    const highSchoolInfo = new HighSchoolInfoPage(page);
-    await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
-    await highSchoolInfo.fillUpSchoolDetails(
-      schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
-      schoolData.state, schoolData.zip,
-      schoolData.grade, schoolData.graduationYear
-    );
-    await highSchoolInfo.nextPageClick();
-  });
+    test(`4. Fill 'High School Info' Page - Run No: ${run}`, async () => {
+      const highSchoolInfo = new HighSchoolInfoPage(page);
+      await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
+      await highSchoolInfo.fillUpSchoolDetails(
+        schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
+        schoolData.state, schoolData.zip,
+        schoolData.grade, schoolData.graduationYear
+      );
+      await highSchoolInfo.nextPageClick();
+    });
 
-  test(`5. Fill 'Essay' Page - Run No: ${run}`, async () => {
-    const essay = new EssayPage(page);
-    await essay.validateEssayPage(headerData.EssayPage);
-    await essay.validatePresenceOfEssayBoxes();
-    await essay.fillupAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
-    await essay.nextPageClick();
-  });
+    test(`5. Fill 'Essay' Page - Run No: ${run}`, async () => {
+      const essay = new EssayPage(page);
+      await essay.validateEssayPage(headerData.EssayPage);
+      await essay.validatePresenceOfEssayBoxes();
+      await essay.fillupAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
+      await essay.nextPageClick();
+    });
 
     test(`6. Review Application ${run}`, async () => {
       const reviewApplication = new ReviewApplicationPage(page);
