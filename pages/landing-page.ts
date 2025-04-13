@@ -9,15 +9,12 @@ export class SdetScholarshipLandingPage {
   constructor(page: Page) {
     this.page = page;
     this.logo = page.getByAltText("Program Logo").first();
-    this.heading = page.locator("//h1");
-    this.loginToApplyButton = page.getByRole("button", {
-      name: "Log In to Apply",
-    });
+    this.heading = page.getByRole('heading', { level: 1 });
+    this.loginToApplyButton = page.getByRole("button", { name: "Log In to Apply" });
   }
 
   async goto() {
-    await this.page.goto(
-      "https://apply.mykaleidoscope.com/program/sdet-test-scholarship",
+    await this.page.goto("https://apply.mykaleidoscope.com/program/sdet-test-scholarship", 
       { waitUntil: "domcontentloaded" }
     );
   }
@@ -26,11 +23,11 @@ export class SdetScholarshipLandingPage {
     await expect(this.page).toHaveTitle("Kaleidoscope - SDET Scholarship");
     await expect(this.logo).toBeVisible();
     await expect(this.heading).toHaveText(heading);
+    await expect(this.loginToApplyButton).toBeVisible();
+    await expect(this.loginToApplyButton).toBeEnabled();
   }
 
   async loginApply() {
-    await expect(this.loginToApplyButton).toBeVisible();
-    await expect(this.loginToApplyButton).toBeEnabled();
     await this.loginToApplyButton.click();
   }
 }

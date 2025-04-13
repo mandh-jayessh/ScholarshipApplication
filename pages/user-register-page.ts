@@ -39,19 +39,18 @@ export class UserRegisterPage {
     this.submitButton = page.getByRole("button", { name: "Submit" });
   }
 
-  async validateLoginPage(heading: string) {
+  async validateSigninPage(heading: string) {
     await expect(this.heading).toHaveText(heading);
     await expect(this.signinButton).toBeVisible();
+    await expect(this.enterPasswordField).toBeEditable();
   }
 
   async fillEmail(email: string) {
-    await expect(this.emailField).toBeEditable();
+    await this.emailField.waitFor({state:"visible"})
     await this.emailField.fill(email);
   }
 
   async clickNext() {
-    await expect(this.nextButton).toBeVisible();
-    await expect(this.nextButton).toBeEnabled();
     await this.nextButton.click();
   }
 
@@ -59,13 +58,7 @@ export class UserRegisterPage {
     await this.waitForField.waitFor({ state: "visible" });
   }
 
-  async enterPasswordAndSignIn(password: string) {
-    await this.enterPassword(password);
-    await this.clickSignin();
-  }
-
   async enterPassword(password: string) {
-    await expect(this.enterPasswordField).toBeEditable();
     await this.enterPasswordField.fill(password);
   }
 
@@ -75,6 +68,10 @@ export class UserRegisterPage {
 
   async validateSignupPage(heading: string) {
     await expect(this.heading).toHaveText(heading);
+    await expect(this.firstNameField).toBeEditable();
+    await expect(this.lastNameField).toBeEditable();
+    await expect(this.mobilePhoneField).toBeEditable();
+    await expect(this.createPasswordField).toBeEditable();
     await expect(this.ageConfirmCheckbox).not.toBeChecked();
     await expect(this.smsNotificationCheckbox).toBeChecked();
     await expect(this.emailNotificationCheckbox).toBeChecked();
@@ -85,43 +82,16 @@ export class UserRegisterPage {
     await expect(this.submitButton).toBeEnabled();
   }
 
-  async submitSignupDetails( fname: string, lname: string, mobno: string, password: string ) {
-    await this.fillFirstName(fname);
-    await this.fillLastName(lname);
-    await this.fillPhoneNumber(mobno);
-    await this.createPassword(password);
-    await this.checkConfirmCheckbox();
-    await this.clickSubmit();
-  }
-
-  async fillFirstName(fname: string) {
-    await expect(this.firstNameField).toBeEditable();
+  async fillSignupDetails( fname: string, lname: string, mobno: string, password: string ) {
     await this.firstNameField.fill(fname);
-  }
-
-  async fillLastName(lname: string) {
-    await expect(this.lastNameField).toBeEditable();
     await this.lastNameField.fill(lname);
-  }
-
-  async fillPhoneNumber(mobno: string) {
-    await expect(this.mobilePhoneField).toBeEditable();
     await this.mobilePhoneField.fill(mobno);
-  }
-
-  async createPassword(password: string) {
-    await expect(this.createPasswordField).toBeEditable();
     await this.createPasswordField.fill(password);
-  }
-
-  async checkConfirmCheckbox() {
     await this.ageConfirmCheckbox.check();
-    await expect(this.ageConfirmCheckbox).toBeChecked();
   }
 
   async clickSubmit() {
     await this.submitButton.scrollIntoViewIfNeeded();
-    await expect(this.submitButton).toBeEnabled();
     await this.submitButton.click();
   }
 }

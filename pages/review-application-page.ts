@@ -57,8 +57,8 @@ export class ReviewApplicationPage {
     this.expandCurricularActivities = page.getByRole("button", { name: `2.${headerData.ExtracurricularActivitiesPage} Edit` });
     this.expandHighSchoolInfo = page.getByRole("button", { name: `3.${headerData.HighSchoolInfoPage} Edit` });
     this.expandEssay = page.getByRole("button", { name: `4.${headerData.EssayPage} Edit` });
-    this.submitButton = page.locator("span").getByText("Submit");
-    this.printApplicationButton = page.locator("span").getByText("Print Application");
+    this.submitButton = page.getByRole("button", { name: "Submit" })
+    this.printApplicationButton = page.getByRole("button", { name: "Print Application" })
     this.firstName = page.locator("span:has-text('First Name')");
     this.lastName = page.locator("span:has-text('Last Name')");
     this.email = page.locator("span:has-text('Email Address')");
@@ -158,8 +158,8 @@ export class ReviewApplicationPage {
 
   async reviewEssayPageContents() {
     await this.openCloseSection(this.expandEssay);
-    await expect(this.essayAboutSection.locator("nth=0")).toContainText(essayData.essay1);
-    await expect(this.essayAboutSection.locator("nth=1")).toContainText(essayData.essay2);
+    await expect(this.essayAboutSection.nth(0)).toContainText(essayData.essay1);
+    await expect(this.essayAboutSection.nth(1)).toContainText(essayData.essay2);
     await this.openCloseSection(this.expandEssay);
   }
 

@@ -7,20 +7,22 @@ import { GetToKnowYouPage } from "../pages/get-to-know-you-page";
 import { ExtracurricularActivitiesPage } from "../pages/extracurricular-activities-page";
 import { HighSchoolInfoPage } from "../pages/high-school-info-page";
 import { EssayPage } from "../pages/essay-page";
-import { ReviewApplicationPage } from "../pages/review-application-page";
+import { ReviewYourApplicationPage } from "../pages/review-your-application-page";
 import { SubmittedApplicationPage } from "../pages/submitted-application-page";
 
 import userData from "../data/test-data/user-details.json";
 import schoolData from "../data/test-data/high-school-info.json";
 import activityData from "../data/test-data/curricular-activities.json";
 import essayData from "../data/test-data/essays.json";
+import essayTextBoxHeaders from "../data/validation-data/essay-textbox-header..json";
 import headerData from "../data/validation-data/heading-data.json";
+
 
 test.describe("Kaleidoscope", () => {
   let browser: Browser;
   let context: BrowserContext;
   let page: Page;
-  let noOfRuns: number = 2;
+  let noOfRuns: number = 2;  
 
   test.beforeAll(async () => {
     browser = await chromium.launch();
@@ -31,11 +33,24 @@ test.describe("Kaleidoscope", () => {
     console.log(`Generated Email: ${globalThis.email}`);
   });
 
+  // Page Object Initialization - fixtures
+  const createPages = (page: Page) => {
+    return {
+      landing: new SdetScholarshipLandingPage(page),
+      userRegister: new UserRegisterPage(page),
+      getToKnowYou: new GetToKnowYouPage(page),
+      curricularActivity: new ExtracurricularActivitiesPage(page),
+      highSchoolInfo: new HighSchoolInfoPage(page),
+      essay: new EssayPage(page),
+      reviewApplication: new ReviewYourApplicationPage(page),
+      submittedApplication: new SubmittedApplicationPage(page),
+    };
+  };
+
   for (let run = 1; run <= noOfRuns; run++) {
 
-    test(`1. Register User - Run No: ${run}`, async () => {
-      const landing = new SdetScholarshipLandingPage(page);
-      const userRegister = new UserRegisterPage(page);
+    test(`1. Register User - Run No: ${run}`, async ({}) => {
+      const { landing, userRegister } = createPages(page);
 
       await landing.goto();
       await landing.validatelandingPage(headerData.LandingPage);
@@ -59,12 +74,13 @@ test.describe("Kaleidoscope", () => {
     });
 
     test(`2. Fill 'Get to Know You' Page - Run No: ${run}`, async () => {
-      const getToKnowYou = new GetToKnowYouPage(page);
+      const { getToKnowYou } = createPages(page);
+
       await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
       await getToKnowYou.fillUpDetails(
         userData.streetAddress, userData.state, userData.city,
         userData.zip, userData.country
-      );
+      )
       await getToKnowYou.navigateToNextPage();
       if(await page.getByText("Failed to save").isVisible()){
         console.log("Application issue - Failed to save")
@@ -72,7 +88,8 @@ test.describe("Kaleidoscope", () => {
     });
 
     test(`3. Fill 'Extracurricular Activities' Page - Run No: ${run}`, async () => {
-      const curricularActivity = new ExtracurricularActivitiesPage(page);
+      const { curricularActivity } = createPages(page);
+
       await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
       await curricularActivity.addEntry(
         activityData[0].activityName, activityData[0].yearsInvolved,
@@ -90,18 +107,19 @@ test.describe("Kaleidoscope", () => {
     });
 
     test(`4. Fill 'High School Info' Page - Run No: ${run}`, async () => {
-      const highSchoolInfo = new HighSchoolInfoPage(page);
+      const { highSchoolInfo } = createPages(page);
+      
       await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
       await highSchoolInfo.fillUpSchoolDetails(
         schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
-        schoolData.state, schoolData.zip, schoolData.grade, schoolData.graduationYear, 
-        "transcriptToUpload/My School Transcript.pdf"
+        schoolData.state, schoolData.zip, schoolData.grade, 
+        schoolData.graduationYear, "transcriptToUpload/My School Transcript.pdf"
       );
       await highSchoolInfo.navigateToNextPage();
     });
 
     test(`5. Fill 'Essay' Page - Run No: ${run}`, async () => {
-      const essay = new EssayPage(page);
+      const { essay } = createPages(page);
       await essay.validateEssayPage(headerData.EssayPage);
       await essay.validatePresenceOfEssayBoxes();
       await essay.fillupAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
@@ -109,13 +127,21 @@ test.describe("Kaleidoscope", () => {
     });
 
     test(`6. Review Application ${run}`, async () => {
-      const reviewApplication = new ReviewApplicationPage(page);
-      
+     const { reviewApplication } = createPages(page);
+
       await reviewApplication.validateReviewPage();
-      await reviewApplication.reviewUserContents();
+      await reviewApplication.reviewUserContents(
+        userData.firstName, userData.lastName, globalThis.email,
+        userData.streetAddress, userData.state, userData.city,
+        userData.zip, userData.country
+      );
       await reviewApplication.reviewCurricularPageContents();
-      await reviewApplication.reviewHighSchoolInfoPageContents();
-      await reviewApplication.reviewEssayPageContents();
+      await reviewApplication.reviewHighSchoolInfoPageContents(
+        schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
+        schoolData.state, schoolData.zip, 
+        schoolData.grade, schoolData.graduationYear
+      );
+      await reviewApplication.reviewEssayPageContents(essayData.essay1, essayData.essay2);
 
       const url = page.url();
       console.log(`URL: ${url}`);
@@ -125,7 +151,8 @@ test.describe("Kaleidoscope", () => {
     });
 
     test(`7. Submit Application - Run No: ${run}`, async () => {
-      const submittedApplication = new SubmittedApplicationPage(page);
+      const { submittedApplication } = createPages(page);
+      
       await submittedApplication.validateNoEditing();
       console.log("Application submitted successfully");
     });

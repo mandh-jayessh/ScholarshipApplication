@@ -11,18 +11,18 @@ export class SubmittedApplicationPage {
   constructor(page: Page) {
     this.page = page;
     this.editButtons = page.getByText("Edit");
-    this.editButtonGetToKnow = this.editButtons.first();
-    this.editButtonCurricularActivities = this.editButtons.locator("nth=1");
-    this.editButtonHighSchoolInfo = this.editButtons.locator("nth=2");
-    this.editButtonEssay = this.editButtons.last();
+    this.editButtonGetToKnow = this.editButtons.nth(0);
+    this.editButtonCurricularActivities = this.editButtons.nth(1);
+    this.editButtonHighSchoolInfo = this.editButtons.nth(2);
+    this.editButtonEssay = this.editButtons.nth(3);
   }
 
   async validateNoEditing() {
     await this.editButtonEssay.waitFor({ state: "detached" });
     await expect(this.editButtons).toHaveCount(0);
-    await expect(this.editButtonGetToKnow).not.toBeAttached;
-    await expect(this.editButtonCurricularActivities).not.toBeAttached;
-    await expect(this.editButtonHighSchoolInfo).not.toBeAttached;
-    await expect(this.editButtonEssay).not.toBeAttached;
+    await expect(this.editButtonGetToKnow).not.toBeAttached();
+    await expect(this.editButtonCurricularActivities).not.toBeAttached();
+    await expect(this.editButtonHighSchoolInfo).not.toBeAttached();
+    await expect(this.editButtonEssay).not.toBeAttached();
   }
 }
