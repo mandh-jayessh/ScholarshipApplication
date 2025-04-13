@@ -12,7 +12,7 @@ export class ExtracurricularActivitiesPage {
   descriptionOfInvolvement: Locator;
   nextPageButton: Locator;
   addCompletedEntry: Locator;
-  minEntryError: Locator;
+  minActivyRequiredError: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -25,7 +25,7 @@ export class ExtracurricularActivitiesPage {
     this.leadershipRolesField = page.getByPlaceholder("Long Input").first();
     this.descriptionOfInvolvement = page.getByPlaceholder("Long Input").last();
     this.nextPageButton = page.getByRole("button", { name: "Next Page" });
-    this.minEntryError = page.getByText("Please add at least 2 entries")
+    this.minActivyRequiredError = page.getByText("Please add at least 2 entries")
     this.addCompletedEntry = page.getByText("Add", { exact: true });
   }
 
@@ -60,9 +60,9 @@ export class ExtracurricularActivitiesPage {
     await this.addEntryButton.click();
   }
 
-  async validate2entriesRequired() {
-    const minEntryError: string = "Please add at least 2 entries"
-    await expect(this.minEntryError).toContainText(minEntryError);
+  async validateAtLeast2activitiesRequired() {
+    const errorText: string = "Please add at least 2 entries"
+    await expect(this.minActivyRequiredError).toContainText(errorText);
   }
 
   async completeEntry() {

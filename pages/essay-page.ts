@@ -50,9 +50,10 @@ export class EssayPage {
     await expect(inputBox).toBeVisible();
     await checkbox.uncheck();
     await expect(checkbox).not.toBeChecked();
+    await inputBox.waitFor({ state: "hidden"})
   }
 
-  async fillupAnimalsAndSchoolsEssays(essay1: string, essay2: string) {
+  async answerAnimalsAndSchoolsEssays(essay1: string, essay2: string) {
     await this.animalsCheckbox.check();
     await this.essayAnimalInputBox.fill(essay1);
     await this.schoolCheckbox.check();

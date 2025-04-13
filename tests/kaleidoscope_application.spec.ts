@@ -96,7 +96,7 @@ test.describe("Kaleidoscope", () => {
         activityData[0].description, activityData[0].achievements
       );
       await curricularActivity.navigateToNextPage();
-      await curricularActivity.validate2entriesRequired();
+      await curricularActivity.validateAtLeast2activitiesRequired();
       for (let i = 1; i < 4; i++) {
         await curricularActivity.addEntry(
           activityData[i].activityName, activityData[i].yearsInvolved,
@@ -122,7 +122,7 @@ test.describe("Kaleidoscope", () => {
       const { essay } = createPages(page);
       await essay.validateEssayPage(headerData.EssayPage);
       await essay.validatePresenceOfEssayBoxes();
-      await essay.fillupAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
+      await essay.answerAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
       await essay.navigateToNextPage();
     });
 
