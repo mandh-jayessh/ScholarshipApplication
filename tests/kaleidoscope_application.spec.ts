@@ -52,11 +52,11 @@ test.describe("Kaleidoscope Application", () => {
     test(`1. Register User - Run No: ${run}`, async ({}) => {
       const { landing, userRegister } = createPages(page);
 
-      await landing.goto();
+      await landing.gotoLandingPage();
       await landing.validatelandingPage(headerData.LandingPage);
-      await landing.loginApply();
+      await landing.loginToApply();
       await userRegister.fillEmail(globalThis.email);
-      await userRegister.clickNext();
+      await userRegister.navigateToNextScreen();
       await userRegister.waitForLoad();
 
       if ((await page.title()) === "Signup") {
@@ -68,8 +68,9 @@ test.describe("Kaleidoscope Application", () => {
         await userRegister.clickSubmit()
       } else if ((await page.title()) === "Login") {
         await userRegister.validateSigninPage(headerData.LoginPage);
+        await userRegister.validateRequiredFields()
         await userRegister.enterPassword(userData.password);
-        await userRegister.clickSignin()
+        await userRegister.signIn();
       }
     });
 
@@ -77,27 +78,22 @@ test.describe("Kaleidoscope Application", () => {
       const { getToKnowYou } = createPages(page);
 
       await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
+      await getToKnowYou.validateRequiredFields()
       await getToKnowYou.fillRequiredFields(
         userData.streetAddress, userData.state, userData.city,
         userData.zip, userData.country
       )
       await getToKnowYou.navigateToNextPage();
-      if(await page.getByText("Failed to save").isVisible()){
-        console.log("Application issue - Failed to save")
-      }
     });
 
     test(`3. Fill 'Extracurricular Activities' Page - Run No: ${run}`, async () => {
       const { curricularActivity } = createPages(page);
 
       await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
-      await curricularActivity.addEntry(
-        activityData[0].activityName, activityData[0].yearsInvolved,
-        activityData[0].description, activityData[0].achievements
-      );
+      await curricularActivity.ValidateAddEntryDialogModal()
       await curricularActivity.navigateToNextPage();
       await curricularActivity.validateAtLeast2activitiesRequired();
-      for (let i = 1; i < 4; i++) {
+      for (let i = 0; i < 4; i++) {
         await curricularActivity.addEntry(
           activityData[i].activityName, activityData[i].yearsInvolved,
           activityData[i].description, activityData[i].achievements
@@ -110,6 +106,7 @@ test.describe("Kaleidoscope Application", () => {
       const { highSchoolInfo } = createPages(page);
       
       await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
+      await highSchoolInfo.validateRequiredFields()
       await highSchoolInfo.fillRequiredFields(
         schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
         schoolData.state, schoolData.zip, schoolData.grade, 

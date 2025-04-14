@@ -13,7 +13,7 @@ export class SdetScholarshipLandingPage {
     this.loginToApplyButton = page.getByRole("button", { name: "Log In to Apply" });
   }
 
-  async goto() {
+  async gotoLandingPage() {
     await this.page.goto("https://apply.mykaleidoscope.com/program/sdet-test-scholarship", 
       { waitUntil: "domcontentloaded" }
     );
@@ -27,7 +27,7 @@ export class SdetScholarshipLandingPage {
     await expect(this.loginToApplyButton).toBeEnabled();
   }
 
-  async loginApply() {
+  async loginToApply() {
     await this.loginToApplyButton.click();
   }
 }

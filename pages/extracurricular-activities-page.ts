@@ -32,10 +32,9 @@ export class ExtracurricularActivitiesPage {
   async validateActivitiesPage(heading: string) {
     await this.addEntryButton.waitFor({ state: "visible" });
     await expect(this.heading).toHaveText(heading);
-    await this.ValidateAddEntryModal();
   }
 
-  async ValidateAddEntryModal() {
+  async ValidateAddEntryDialogModal() {
     await this.addNewEntry();
     await expect(this.extracurricularActivityName).toBeEditable();
     await expect(this.yearsInvolvedField).toBeEditable();
@@ -49,7 +48,7 @@ export class ExtracurricularActivitiesPage {
     await this.extracurricularActivityName.waitFor({ state: "visible" });
     await this.extracurricularActivityName.fill(activity);
     await this.yearsInvolvedUpArrow.click(); 
-    await this.yearsInvolvedField.fill(years.toString())
+    await this.yearsInvolvedField.fill(years.toString());
     await this.leadershipRolesField.fill(roles);
     await this.descriptionOfInvolvement.fill(description);
     await this.completeEntry();
@@ -61,7 +60,7 @@ export class ExtracurricularActivitiesPage {
   }
 
   async validateAtLeast2activitiesRequired() {
-    const errorText: string = "Please add at least 2 entries"
+    const errorText: string = "Please add at least 2 entries";
     await expect(this.minActivyRequiredError).toContainText(errorText);
   }
 

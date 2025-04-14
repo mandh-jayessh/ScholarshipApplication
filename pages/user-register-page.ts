@@ -50,7 +50,7 @@ export class UserRegisterPage {
     await this.emailField.fill(email);
   }
 
-  async clickNext() {
+  async navigateToNextScreen() {
     await this.nextButton.click();
   }
 
@@ -62,24 +62,37 @@ export class UserRegisterPage {
     await this.enterPasswordField.fill(password);
   }
 
-  async clickSignin() {
+  async signIn() {
     await this.signinButton.click();
   }
 
   async validateSignupPage(heading: string) {
     await expect(this.heading).toHaveText(heading);
-    await expect(this.firstNameField).toBeEditable();
-    await expect(this.lastNameField).toBeEditable();
-    await expect(this.mobilePhoneField).toBeEditable();
-    await expect(this.createPasswordField).toBeEditable();
-    await expect(this.ageConfirmCheckbox).not.toBeChecked();
-    await expect(this.smsNotificationCheckbox).toBeChecked();
-    await expect(this.emailNotificationCheckbox).toBeChecked();
-    await expect(this.promotionalEmailCheckbox).toBeChecked();
-    await expect(this.backButton).toBeVisible();
-    await expect(this.submitButton).toBeVisible();
-    await expect(this.backButton).toBeEnabled();
-    await expect(this.submitButton).toBeEnabled();
+  }
+
+  async validateRequiredFields() {
+    await this.assertFieldEditable(this.firstNameField) 
+    await this.assertFieldEditable(this.lastNameField) 
+    await this.assertFieldEditable(this.mobilePhoneField) 
+    await this.assertFieldEditable(this.createPasswordField) 
+    await this.assertCheckboxChecked(this.smsNotificationCheckbox)
+    await this.assertCheckboxChecked(this.emailNotificationCheckbox)
+    await this.assertCheckboxChecked(this.promotionalEmailCheckbox)
+    await this.assertFieldVisibleAndEnabled(this.backButton)
+    await this.assertFieldVisibleAndEnabled(this.submitButton)
+  }
+
+  async assertFieldEditable(element: Locator) {
+    await expect(element).toBeEditable();
+  }
+
+  async assertFieldVisibleAndEnabled(element: Locator) {
+    await expect(element).toBeVisible()
+    await expect(element).toBeEnabled()
+  }
+
+  async assertCheckboxChecked(element: Locator) {
+    await expect(element).toBeChecked()
   }
 
   async fillSignupDetails( fname: string, lname: string, mobno: string, password: string ) {

@@ -36,15 +36,28 @@ export class HighSchoolInfoPage {
   async validateHighSchoolInfoPage(heading: string) {
     await this.schoolName.waitFor({ state: 'visible', timeout: 30000  });
     await expect(this.heading).toHaveText(heading);
-    await expect(this.schoolName).toBeEditable();
-    await expect(this.schoolStreetAddress).toBeEditable();
-    await expect(this.schoolCity).toBeEditable();
-    await expect(this.schoolState).toBeEditable();
-    await expect(this.schoolZip).toBeEditable();
-    await expect(this.gpa).toBeEditable();
-    await expect(this.graduationYear).toBeEditable();
-    await expect(this.uploadFileButton).toBeEnabled();
   }
+
+  async validateRequiredFields() {
+    await this.assertFieldEditable(this.schoolName); 
+    await this.assertFieldEditable(this.schoolStreetAddress);
+    await this.assertFieldEditable(this.schoolCity);
+    await this.assertFieldEditable(this.schoolState);
+    await this.assertFieldEditable(this.schoolZip);
+    await this.assertFieldEditable(this.gpa);
+    await this.assertFieldEditable(this.graduationYear);
+    await this.assertFieldVisibleAndEnabled(this.uploadFileButton);
+  }
+
+  async assertFieldEditable(element: Locator) {
+      await expect(element).toBeEditable();
+  }
+
+  async assertFieldVisibleAndEnabled(element: Locator) {
+    await expect(element).toBeVisible();
+    await expect(element).toBeEnabled();
+  }
+
 
   async fillRequiredFields(
     name: string, address: string, city: string, state: string, 
@@ -57,7 +70,7 @@ export class HighSchoolInfoPage {
     await this.schoolZip.click().then(() => this.schoolZip.fill(zip.toString()));
     await this.gpa.click().then(() => this.gpa.fill(gpa.toString()));
     await this.graduationYear.fill(year.toString()).then(() => this.graduationYear.blur());
-    await this.uploadFile(filePath);
+    await this.uploadFile(path.resolve(filePath));
   }
 
   async uploadFile(filePath: string) {

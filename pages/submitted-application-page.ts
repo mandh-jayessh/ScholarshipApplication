@@ -20,9 +20,13 @@ export class SubmittedApplicationPage {
   async validateNoEditing() {
     await this.editButtonEssay.waitFor({ state: "detached" });
     await expect(this.editButtons).toHaveCount(0);
-    await expect(this.editButtonGetToKnow).not.toBeAttached();
-    await expect(this.editButtonCurricularActivities).not.toBeAttached();
-    await expect(this.editButtonHighSchoolInfo).not.toBeAttached();
-    await expect(this.editButtonEssay).not.toBeAttached();
+    await this.assertElemtNotAttached(this.editButtonGetToKnow);
+    await this.assertElemtNotAttached(this.editButtonCurricularActivities);
+    await this.assertElemtNotAttached(this.editButtonHighSchoolInfo);
+    await this.assertElemtNotAttached(this.editButtonEssay);
+  }
+
+  async assertElemtNotAttached(element: Locator) {
+    await expect(element).not.toBeAttached();
   }
 }

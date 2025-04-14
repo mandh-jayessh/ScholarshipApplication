@@ -24,12 +24,19 @@ export class GetToKnowYouPage {
   async validateGetToKnowYouPage(heading: string) {
     await this.streetAddressField.waitFor({ state: "visible" });
     await expect(this.heading).toHaveText(heading);
-    await expect(this.streetAddressField).toBeEditable();
-    await expect(this.stateField).toBeEditable();
-    await expect(this.cityField).toBeEditable();
-    await expect(this.zipcodeField).toBeEditable();
-    await expect(this.countryField).toBeEditable();
   }
+
+  async validateRequiredFields() {
+    await this.assertFieldEditable(this.streetAddressField);
+    await this.assertFieldEditable(this.stateField);
+    await this.assertFieldEditable(this.cityField);
+    await this.assertFieldEditable(this.zipcodeField);
+    await this.assertFieldEditable(this.countryField);
+  }
+
+  async assertFieldEditable(element: Locator) {
+    await expect(element).toBeEditable();
+}
 
   async fillRequiredFields(
     address: string, state: string, city: string,
