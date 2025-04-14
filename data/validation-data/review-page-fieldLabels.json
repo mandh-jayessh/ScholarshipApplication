@@ -1,0 +1,25 @@
+{
+    "getToKnowYou": {
+        "fname": "First Name",
+        "lname": "Last Name",
+        "email": "Email Address",
+        "address": "Street Address",
+        "state": "State (Full)",
+        "city": "City",
+        "zip": "Zip Code",
+        "country": "Country"
+    },
+    "highSchoolInfo": {
+        "name": "High School Name",
+        "address": "High School Street Address",
+        "city": "High School City",
+        "state": "High School State (Full)",
+        "zip": "High School Zip Code",
+        "gpa": "GPA",
+        "graduationYear": "Year of High School Graduation"
+    },
+    "essays": {
+        "animals": "Essay about Animals",
+        "school": "Essay about School"
+    }
+}

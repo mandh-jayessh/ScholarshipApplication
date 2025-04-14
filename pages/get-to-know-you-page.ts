@@ -31,7 +31,7 @@ export class GetToKnowYouPage {
     await expect(this.countryField).toBeEditable();
   }
 
-  async fillUpDetails(
+  async fillRequiredFields(
     address: string, state: string, city: string,
     zip: string, country: string
   ) {

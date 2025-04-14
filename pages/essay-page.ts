@@ -1,5 +1,4 @@
 import { Page, Locator, expect } from "@playwright/test";
-import essayTextBoxHeaders from "../data/validation-data/essay-textbox-header..json";
 
 export class EssayPage {
   page: Page;
@@ -33,13 +32,6 @@ export class EssayPage {
   async validateEssayPage(heading: string) {
     await this.otherCheckbox.waitFor({ state: "visible" });
     await expect(this.heading).toHaveText(heading);
-  }
-
-  async validatePresenceOfEssayBoxes() {
-    await this.validateEssayBox(this.carsCheckbox, this.essayCarsInputBox, essayTextBoxHeaders.carsTextbox);
-    await this.validateEssayBox(this.animalsCheckbox, this.essayAnimalInputBox, essayTextBoxHeaders.animalsTextbox);
-    await this.validateEssayBox(this.schoolCheckbox, this.essaySchoolInputBox, essayTextBoxHeaders.schoolsTextbox);
-    await this.validateEssayBox(this.otherCheckbox, this.essayOtherInputBox, essayTextBoxHeaders.othersTextbox);
   }
 
   async validateEssayBox(checkbox: Locator, inputBox: Locator, text: string) {

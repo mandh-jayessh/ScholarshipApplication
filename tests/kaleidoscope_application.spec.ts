@@ -14,11 +14,11 @@ import userData from "../data/test-data/user-details.json";
 import schoolData from "../data/test-data/high-school-info.json";
 import activityData from "../data/test-data/curricular-activities.json";
 import essayData from "../data/test-data/essays.json";
-import essayTextBoxHeaders from "../data/validation-data/essay-textbox-header..json";
+import essayTextBoxHeaders from "../data/validation-data/essay-textbox-header.json";
 import headerData from "../data/validation-data/heading-data.json";
 
 
-test.describe("Kaleidoscope", () => {
+test.describe("Kaleidoscope Application", () => {
   let browser: Browser;
   let context: BrowserContext;
   let page: Page;
@@ -77,7 +77,7 @@ test.describe("Kaleidoscope", () => {
       const { getToKnowYou } = createPages(page);
 
       await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
-      await getToKnowYou.fillUpDetails(
+      await getToKnowYou.fillRequiredFields(
         userData.streetAddress, userData.state, userData.city,
         userData.zip, userData.country
       )
@@ -110,38 +110,42 @@ test.describe("Kaleidoscope", () => {
       const { highSchoolInfo } = createPages(page);
       
       await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
-      await highSchoolInfo.fillUpSchoolDetails(
+      await highSchoolInfo.fillRequiredFields(
         schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
         schoolData.state, schoolData.zip, schoolData.grade, 
-        schoolData.graduationYear, "transcriptToUpload/My School Transcript.pdf"
+        schoolData.graduationYear, schoolData.uploadFilePath
       );
       await highSchoolInfo.navigateToNextPage();
     });
 
     test(`5. Fill 'Essay' Page - Run No: ${run}`, async () => {
       const { essay } = createPages(page);
+
       await essay.validateEssayPage(headerData.EssayPage);
-      await essay.validatePresenceOfEssayBoxes();
+      await essay.validateEssayBox(essay.carsCheckbox, essay.essayCarsInputBox, essayTextBoxHeaders.carsTextbox)
+      await essay.validateEssayBox(essay.animalsCheckbox, essay.essayAnimalInputBox, essayTextBoxHeaders.animalsTextbox);
+      await essay.validateEssayBox(essay.schoolCheckbox, essay.essaySchoolInputBox, essayTextBoxHeaders.schoolsTextbox);
+      await essay.validateEssayBox(essay.otherCheckbox, essay.essayOtherInputBox, essayTextBoxHeaders.othersTextbox);
       await essay.answerAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
       await essay.navigateToNextPage();
     });
 
-    test(`6. Review Application ${run}`, async () => {
+    test(`6. Review Application and Submit - Run No: ${run}`, async () => {
      const { reviewApplication } = createPages(page);
 
       await reviewApplication.validateReviewPage();
-      await reviewApplication.reviewUserContents(
+      await reviewApplication.validateAnswersGetToKnowYouPage(
         userData.firstName, userData.lastName, globalThis.email,
         userData.streetAddress, userData.state, userData.city,
         userData.zip, userData.country
       );
-      await reviewApplication.reviewCurricularPageContents();
-      await reviewApplication.reviewHighSchoolInfoPageContents(
+      await reviewApplication.validateAnswersExtraCurricularActivitiesPage();
+      await reviewApplication.validateAnswersHighSchoolInfoPage(
         schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
         schoolData.state, schoolData.zip, 
         schoolData.grade, schoolData.graduationYear
       );
-      await reviewApplication.reviewEssayPageContents(essayData.essay1, essayData.essay2);
+      await reviewApplication.validateAnswersEssayPage(essayData.essay1, essayData.essay2);
 
       const url = page.url();
       console.log(`URL: ${url}`);
@@ -150,7 +154,7 @@ test.describe("Kaleidoscope", () => {
       await page.goto(url);
     });
 
-    test(`7. Submit Application - Run No: ${run}`, async () => {
+    test(`7. Validate Editing is not allowed after Application has been submitted - Run No: ${run}`, async () => {
       const { submittedApplication } = createPages(page);
       
       await submittedApplication.validateNoEditing();

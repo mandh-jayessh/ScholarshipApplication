@@ -46,7 +46,7 @@ export class HighSchoolInfoPage {
     await expect(this.uploadFileButton).toBeEnabled();
   }
 
-  async fillUpSchoolDetails(
+  async fillRequiredFields(
     name: string, address: string, city: string, state: string, 
     zip: number, gpa: number, year: number, filePath: string
   ) {

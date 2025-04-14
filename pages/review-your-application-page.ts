@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import activityData from "../data/test-data/curricular-activities.json";
 import headerData from "../data/validation-data/heading-data.json";
+import fieldLabels from "../data/validation-data/review-page-fieldLabels.json"
 
 export class ReviewYourApplicationPage {
   page: Page;
@@ -27,7 +28,6 @@ export class ReviewYourApplicationPage {
   activity4: Locator;
   activity4Section: Locator;
   
-  essayAboutSection: Locator;
   submissionConfirmText: Locator;
 
 
@@ -56,8 +56,6 @@ export class ReviewYourApplicationPage {
     this.activity4 = page.getByRole("button", { name: activityData[3].activityName });
     this.activity4Section = page.getByLabel(activityData[3].activityName);
 
-    this.essayAboutSection = page.getByRole("listitem").filter({ hasText: "Essay about"})
-
     this.submissionConfirmText = page.getByText("Application submitted");
   }
 
@@ -79,29 +77,34 @@ export class ReviewYourApplicationPage {
     await locator.click();
   }
 
-  getFieldValue(label: string): Locator {
-    return this.page.getByRole("listitem").filter({ hasText: label })
+  async assertFieldValue(label: string, filledData: string, useFirst: boolean =  false, ignoreCase: boolean =  false){
+    let locator = this.page.getByRole("listitem").filter({ hasText: label })
+    if (useFirst) {
+      locator = locator.first();
+    }
+    await expect(locator).toContainText(filledData, { ignoreCase })
   }
 
-  async reviewUserContents(
+  async validateAnswersGetToKnowYouPage(
     fname: string, lname: string, email: string,
     address: string, state: string, city: string,
     zip: string, country: string
   ) {
     await this.openCloseSection(this.expandGetToKnow);
-    await expect(this.getFieldValue("First Name")).toContainText(fname);
-    await expect(this.getFieldValue("Last Name")).toContainText(lname);
-    await expect(this.getFieldValue("Email Address")).toContainText(email, { ignoreCase: true });
-    await expect(this.getFieldValue("Street Address").first()).toContainText(address);
-    await expect(this.getFieldValue("State (Full)")).toContainText(state);
-    await expect(this.getFieldValue("City")).toContainText(city);
-    await expect(this.getFieldValue("Zip Code")).toContainText(zip);
-    await expect(this.getFieldValue("Country")).toContainText(country);
+
+    await this.assertFieldValue(fieldLabels.getToKnowYou.fname, fname)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.lname, lname)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.email, email, false, true)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.address, address, true)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.state, state)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.city, city)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.zip, zip)
+    await this.assertFieldValue(fieldLabels.getToKnowYou.country, country)
+
     await this.openCloseSection(this.expandGetToKnow);
   }
 
-  // generic assertion
-  async reviewCurricularPageContents() {
+  async validateAnswersExtraCurricularActivitiesPage() {
     await this.openCloseSection(this.expandCurricularActivities);
     const activities = [
       {
@@ -128,25 +131,29 @@ export class ReviewYourApplicationPage {
     await this.openCloseSection(this.expandCurricularActivities);
   }
 
-  async reviewHighSchoolInfoPageContents(
+  async validateAnswersHighSchoolInfoPage(
     name: string, address: string, city: string, state: string, 
     zip: number, gpa: number, year: number
   ) {
     await this.openCloseSection(this.expandHighSchoolInfo);
-    await expect(this.getFieldValue("High School Name")).toContainText(name);
-    await expect(this.getFieldValue("High School Street Address").first()).toContainText(address);
-    await expect(this.getFieldValue("High School City")).toContainText(city);
-    await expect(this.getFieldValue("High School State (Full)")).toContainText(state);
-    await expect(this.getFieldValue("High School Zip Code")).toContainText(zip.toString());
-    await expect(this.getFieldValue("GPA")).toContainText(gpa.toString());
-    await expect(this.getFieldValue("Year of High School Graduation")).toContainText(year.toString());
+
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.name, name)
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.address, address, true)
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.city, city)
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.state, state)
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.zip, zip.toString())
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.gpa, gpa.toString())
+    await this.assertFieldValue(fieldLabels.highSchoolInfo.graduationYear, year.toString())
+
     await this.openCloseSection(this.expandHighSchoolInfo);
   }
 
-  async reviewEssayPageContents(essay1: string, essay2: string) {
+  async validateAnswersEssayPage(essay1: string, essay2: string) {
     await this.openCloseSection(this.expandEssay);
-    await expect(this.getFieldValue("Essay about").nth(0)).toContainText(essay1);
-    await expect(this.getFieldValue("Essay about").nth(1)).toContainText(essay2);
+
+    await this.assertFieldValue(fieldLabels.essays.animals, essay1)
+    await this.assertFieldValue(fieldLabels.essays.school, essay2)
+    
     await this.openCloseSection(this.expandEssay);
   }
 
