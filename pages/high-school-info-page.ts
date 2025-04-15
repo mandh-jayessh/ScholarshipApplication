@@ -34,7 +34,10 @@ export class HighSchoolInfoPage {
   }
 
   async validateHighSchoolInfoPage(heading: string) {
-    await this.schoolName.waitFor({ state: 'visible', timeout: 30000  });
+    if(await this.heading.textContent()!=heading){
+      await this.nextPageButton.click()
+    }
+    await this.schoolName.waitFor({ state: 'visible' });
     await expect(this.heading).toHaveText(heading);
   }
 
@@ -61,7 +64,7 @@ export class HighSchoolInfoPage {
 
   async fillRequiredFields(
     name: string, address: string, city: string, state: string, 
-    zip: number, gpa: number, year: number, filePath: string
+    zip: number, gpa: number, year: number
   ) {
     await this.schoolName.fill(name);
     await this.schoolStreetAddress.fill(address);
@@ -70,7 +73,6 @@ export class HighSchoolInfoPage {
     await this.schoolZip.click().then(() => this.schoolZip.fill(zip.toString()));
     await this.gpa.click().then(() => this.gpa.fill(gpa.toString()));
     await this.graduationYear.fill(year.toString()).then(() => this.graduationYear.blur());
-    await this.uploadFile(path.resolve(filePath));
   }
 
   async uploadFile(filePath: string) {

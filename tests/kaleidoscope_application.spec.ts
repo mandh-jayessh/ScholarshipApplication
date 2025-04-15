@@ -1,6 +1,6 @@
-import { test, expect, chromium, Browser, Page, BrowserContext } from '@playwright/test';
-import { faker } from '@faker-js/faker';
-
+import { test, Page } from "@playwright/test";
+import { faker } from "@faker-js/faker";
+// Page Classes
 import { SdetScholarshipLandingPage } from "../pages/landing-page";
 import { UserRegisterPage } from "../pages/user-register-page";
 import { GetToKnowYouPage } from "../pages/get-to-know-you-page";
@@ -9,7 +9,7 @@ import { HighSchoolInfoPage } from "../pages/high-school-info-page";
 import { EssayPage } from "../pages/essay-page";
 import { ReviewYourApplicationPage } from "../pages/review-your-application-page";
 import { SubmittedApplicationPage } from "../pages/submitted-application-page";
-
+// Data Files
 import userData from "../data/test-data/user-details.json";
 import schoolData from "../data/test-data/high-school-info.json";
 import activityData from "../data/test-data/curricular-activities.json";
@@ -17,23 +17,11 @@ import essayData from "../data/test-data/essays.json";
 import essayTextBoxHeaders from "../data/validation-data/essay-textbox-header.json";
 import headerData from "../data/validation-data/heading-data.json";
 
-
 test.describe("Kaleidoscope Application", () => {
-  let browser: Browser;
-  let context: BrowserContext;
-  let page: Page;
-  let noOfRuns: number = 2;  
+  let url: string;
+  let numberOfRuns: number = 2;
 
-  test.beforeAll(async () => {
-    browser = await chromium.launch();
-    context = await browser.newContext();
-    page = await context.newPage();
-
-    globalThis.email = faker.internet.email();
-    console.log(`Generated Email: ${globalThis.email}`);
-  });
-
-  // Page Object Initialization - fixtures
+  // ==========          Page Object Initialization - fixtures          ==========
   const createPages = (page: Page) => {
     return {
       landing: new SdetScholarshipLandingPage(page),
@@ -47,126 +35,189 @@ test.describe("Kaleidoscope Application", () => {
     };
   };
 
-  for (let run = 1; run <= noOfRuns; run++) {
+  test.beforeEach("Navigate to Scholarship Landing Page", async ({ page }) => {
+    const { landing } = createPages(page);
 
-    test(`1. Register User - Run No: ${run}`, async ({}) => {
-      const { landing, userRegister } = createPages(page);
-
+    // Random emails are picked in each run.
+    globalThis.email = faker.internet.email();
+    console.log(`Generated Email: ${globalThis.email}`);
+    await test.step("[ACTION] Navigate to Scholarship Landing Page", async () => {
       await landing.gotoLandingPage();
+    });
+
+    await test.step("[VERIFY] Validate Contents of Landing Page", async () => {
       await landing.validatelandingPage(headerData.LandingPage);
       await landing.loginToApply();
-      await userRegister.fillEmail(globalThis.email);
-      await userRegister.navigateToNextScreen();
-      await userRegister.waitForLoad();
+    });
+  });
 
-      if ((await page.title()) === "Signup") {
-        await userRegister.validateSignupPage(headerData.SignUpPage);
-        await userRegister.fillSignupDetails(
-          userData.firstName, userData.lastName,
-          userData.mobilePhone, userData.password
+  for (let run = 1; run <= numberOfRuns; run++) {
+    test(`Complete the Application for SDET Test Scholarship Program ${run}`, async ({ page }) => {
+      const { userRegister, getToKnowYou, curricularActivity, highSchoolInfo, essay, reviewApplication, submittedApplication } = createPages(page);
+
+      // ==========          Pre Conditions for Applying to Scholarship          ==========
+      await test.step("[ACTION] Begin a New Application by Registering user or Logging In", async () => {
+        await userRegister.fillEmail(globalThis.email);
+        await userRegister.navigateToNextScreen();
+        await userRegister.waitForLoad();
+
+        if ((await page.title()) === "Signup") {
+          await test.step("[VERIFY] Signup Page", async () => {
+            await userRegister.validateSignupPage(headerData.SignUpPage);
+          });
+          await test.step("[ACTION] Fill Details and Register User on Signup Page", async () => {
+            await userRegister.fillSignupDetails(userData.firstName, userData.lastName, userData.mobilePhone, userData.password);
+            await userRegister.clickSubmit();
+            console.log(`Registered the User: ${globalThis.email}`);
+          });
+        } else if ((await page.title()) === "Login") {
+          await test.step("[VERIFY] Signin Page", async () => {
+            await userRegister.validateSigninPage(headerData.LoginPage);
+            await userRegister.validateRequiredFields();
+          });
+          await test.step("[ACTION] Perform Signin", async () => {
+            await userRegister.enterPassword(userData.password);
+            await userRegister.signIn();
+          });
+        }
+      });
+
+      // ==========          Page 1: Get to Know you Page          ==========
+      await test.step("[VERIFY] Validate contents on Page 1 - Get to Know You Page", async () => {
+        await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
+        await getToKnowYou.validateRequiredFields();  // generic assertion
+      });
+
+      await test.step("[ACTION] Fill all Required Fields in Page 1 - Get to Know You Page", async () => {
+        await getToKnowYou.fillRequiredFields(
+          userData.streetAddress, userData.state,
+          userData.city, userData.zip, userData.country
         );
-        await userRegister.clickSubmit()
-      } else if ((await page.title()) === "Login") {
-        await userRegister.validateSigninPage(headerData.LoginPage);
-        await userRegister.validateRequiredFields()
-        await userRegister.enterPassword(userData.password);
-        await userRegister.signIn();
-      }
-    });
+        await getToKnowYou.navigateToNextPage();
+      });
 
-    test(`2. Fill 'Get to Know You' Page - Run No: ${run}`, async () => {
-      const { getToKnowYou } = createPages(page);
+      // ==========          Page 2: Extra Curricular Activity Page          ==========
+      await test.step("[VERIFY] Validate contents on Page 2 - Extra Curricular Activity Page", async () => {
+        await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
+        await curricularActivity.ValidateAddEntryDialogModal();
+        await curricularActivity.navigateToNextPage();
+      });
 
-      await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
-      await getToKnowYou.validateRequiredFields()
-      await getToKnowYou.fillRequiredFields(
-        userData.streetAddress, userData.state, userData.city,
-        userData.zip, userData.country
-      )
-      await getToKnowYou.navigateToNextPage();
-    });
+      await test.step("[VERIFY] Validate that at least 2 Extracurricular Activities are required, when not providing enough.", async () => {
+        await curricularActivity.validateAtLeast2activitiesRequired();
+      });
 
-    test(`3. Fill 'Extracurricular Activities' Page - Run No: ${run}`, async () => {
-      const { curricularActivity } = createPages(page);
+      await test.step("[ACTION] Finish Page 2 by providing 4 Activities", async () => {
+        for (let i = 0; i < 4; i++) {
+          await curricularActivity.addEntry(
+            activityData[i].activityName, activityData[i].yearsInvolved, 
+            activityData[i].description, activityData[i].achievements
+          );
+        }
+        await curricularActivity.navigateToNextPage();
+      });
 
-      await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
-      await curricularActivity.ValidateAddEntryDialogModal()
-      await curricularActivity.navigateToNextPage();
-      await curricularActivity.validateAtLeast2activitiesRequired();
-      for (let i = 0; i < 4; i++) {
-        await curricularActivity.addEntry(
-          activityData[i].activityName, activityData[i].yearsInvolved,
-          activityData[i].description, activityData[i].achievements
+      // ==========          Page 3: High School Information Page          ==========
+      await test.step("[VERIFY] Validate contents on Page 3 - High School Information Page", async () => {
+        await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
+        await highSchoolInfo.validateRequiredFields();   // generic assertion
+      });
+
+      await test.step("[ACTION] Fill out the Form on High School Information Page", async () => {
+        await highSchoolInfo.fillRequiredFields(
+          schoolData.schoolName,
+          schoolData.schoolStreet,
+          schoolData.city,
+          schoolData.state,
+          schoolData.zip,
+          schoolData.grade,
+          schoolData.graduationYear
         );
-      }
-      await curricularActivity.navigateToNextPage();
-    });
+      });
 
-    test(`4. Fill 'High School Info' Page - Run No: ${run}`, async () => {
-      const { highSchoolInfo } = createPages(page);
+      await test.step("[ACTION] Upload School Transcript on High School Information Page", async () => {
+        await highSchoolInfo.uploadFile(schoolData.uploadFilePath);
+        await highSchoolInfo.navigateToNextPage();
+      });
+
+      // ==========          Page 4: Essay Page          ==========
+      await test.step("[VERIFY] Validate contents on Page 4 - Essay Page", async () => {
+        await essay.validateEssayPage(headerData.EssayPage);
+      });
+
+      await test.step("[VERIFY] Validate Cars Checkbox on Essay Page", async () => {
+        await essay.validateEssayBox(essay.carsCheckbox, essay.essayCarsInputBox, essayTextBoxHeaders.carsTextbox);
+      });
+
+      await test.step("[VERIFY] Validate Animals Checkbox on Essay Page", async () => {
+        await essay.validateEssayBox(essay.animalsCheckbox, essay.essayAnimalInputBox, essayTextBoxHeaders.animalsTextbox);
+      });
+
+      await test.step("[VERIFY] Validate School Checkbox on Essay Page", async () => {
+        await essay.validateEssayBox(essay.schoolCheckbox, essay.essaySchoolInputBox, essayTextBoxHeaders.schoolsTextbox);
+      });
+
+      await test.step("[VERIFY] Validate Others Checkbox on Essay Page", async () => {
+        await essay.validateEssayBox(essay.otherCheckbox, essay.essayOtherInputBox, essayTextBoxHeaders.othersTextbox);
+      });
+
+      await test.step("[ACTION] On Essay Page - Select Animals,School Checkbox and Provide answers to their essays", async () => {
+        await essay.answerAnimalsAndSchoolsEssays(essayData.essay1,essayData.essay2);
+        await essay.navigateToNextPage();
+      });
+
+      // ==========          Review Your Application Page          ==========
+      await test.step("[VERIFY] Validate contents on Review Page", async () => {
+        await reviewApplication.validateReviewPage();
+      });
+      // generic assertion
+      await test.step("[VERIFY] Validate Get to Know You Section answers", async () => {
+        await reviewApplication.validateAnswersGetToKnowYouPage(
+          userData.firstName, userData.lastName, globalThis.email, userData.streetAddress,
+          userData.state, userData.city,userData.zip, userData.country
+        );
+      });
       
-      await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
-      await highSchoolInfo.validateRequiredFields()
-      await highSchoolInfo.fillRequiredFields(
-        schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
-        schoolData.state, schoolData.zip, schoolData.grade, 
-        schoolData.graduationYear, schoolData.uploadFilePath
-      );
-      await highSchoolInfo.navigateToNextPage();
-    });
+      await test.step("[VERIFY] Validate Extra Curricular Activities Section answers", async () => {
+        await reviewApplication.validateAnswersExtraCurricularActivitiesPage();
+      });
+      // generic assertion
+      await test.step("[VERIFY] Validate High School Information Section answers", async () => {
+        await reviewApplication.validateAnswersHighSchoolInfoPage(
+          schoolData.schoolName, schoolData.schoolStreet, schoolData.city, schoolData.state,
+          schoolData.zip, schoolData.grade, schoolData.graduationYear
+        );
+      });
 
-    test(`5. Fill 'Essay' Page - Run No: ${run}`, async () => {
-      const { essay } = createPages(page);
+      await test.step("[VERIFY] Validate Essay Section answers", async () => {
+        await reviewApplication.validateAnswersEssayPage(essayData.essay1, essayData.essay2);
+      });
 
-      await essay.validateEssayPage(headerData.EssayPage);
-      await essay.validateEssayBox(essay.carsCheckbox, essay.essayCarsInputBox, essayTextBoxHeaders.carsTextbox)
-      await essay.validateEssayBox(essay.animalsCheckbox, essay.essayAnimalInputBox, essayTextBoxHeaders.animalsTextbox);
-      await essay.validateEssayBox(essay.schoolCheckbox, essay.essaySchoolInputBox, essayTextBoxHeaders.schoolsTextbox);
-      await essay.validateEssayBox(essay.otherCheckbox, essay.essayOtherInputBox, essayTextBoxHeaders.othersTextbox);
-      await essay.answerAnimalsAndSchoolsEssays(essayData.essay1, essayData.essay2);
-      await essay.navigateToNextPage();
-    });
+      await test.step("[ACTION] Capture the Page URL", async () => {
+        url = page.url();
+        console.log(`URL: ${url}`);
+      });
 
-    test(`6. Review Application and Submit - Run No: ${run}`, async () => {
-     const { reviewApplication } = createPages(page);
+      await test.step("[ACTION] Submit the Application", async () => {
+        await reviewApplication.submitApplication();
+        await reviewApplication.confirmSubmission();
+        console.log("Application submitted successfully");
+      });
 
-      await reviewApplication.validateReviewPage();
-      await reviewApplication.validateAnswersGetToKnowYouPage(
-        userData.firstName, userData.lastName, globalThis.email,
-        userData.streetAddress, userData.state, userData.city,
-        userData.zip, userData.country
-      );
-      await reviewApplication.validateAnswersExtraCurricularActivitiesPage();
-      await reviewApplication.validateAnswersHighSchoolInfoPage(
-        schoolData.schoolName, schoolData.schoolStreet, schoolData.city,
-        schoolData.state, schoolData.zip, 
-        schoolData.grade, schoolData.graduationYear
-      );
-      await reviewApplication.validateAnswersEssayPage(essayData.essay1, essayData.essay2);
+      // ==========          Submitted Application           ==========
+      await test.step("[ACTION] Navigate To Captured URL", async () => {
+        await page.goto(url);
+        console.log(`Navigated to: ${url}`);
+      });
 
-      const url = page.url();
-      console.log(`URL: ${url}`);
-      await reviewApplication.submitApplication();
-      await reviewApplication.confirmSubmission();
-      await page.goto(url);
-    });
-
-    test(`7. Validate Editing is not allowed after Application has been submitted - Run No: ${run}`, async () => {
-      const { submittedApplication } = createPages(page);
-      
-      await submittedApplication.validateNoEditing();
-      console.log("Application submitted successfully");
+      await test.step("[VERIFY] Validate Editing is not allowed after Application has been submitted.", async () => {
+        await submittedApplication.validateNoEditing();
+      });
     });
   }
 
   test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
     await page.close();
-    console.log(`Test: "${testInfo.title}" finished with status ${testInfo.status}`);
-    console.log(`Ran in Worker ${testInfo.workerIndex}`)  
-  });
-
-  test.afterAll(async () => {
-    await browser.close();
-    console.log("Browser closed");
+    console.log(`Test: "${testInfo.title}",Ran in Worker index ${testInfo.workerIndex} finished with status ${testInfo.status}`);
   });
 });

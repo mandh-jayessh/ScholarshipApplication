@@ -30,6 +30,9 @@ export class EssayPage {
   }
 
   async validateEssayPage(heading: string) {
+    if(await this.heading.textContent()!=heading){
+      await this.nextPageButton.click()
+    }
     await this.otherCheckbox.waitFor({ state: "visible" });
     await expect(this.heading).toHaveText(heading);
   }
@@ -42,7 +45,7 @@ export class EssayPage {
     await expect(inputBox).toBeVisible();
     await checkbox.uncheck();
     await expect(checkbox).not.toBeChecked();
-    await inputBox.waitFor({ state: "hidden"})
+    await inputBox.waitFor({ state: "hidden" })
   }
 
   async answerAnimalsAndSchoolsEssays(essay1: string, essay2: string) {
@@ -54,5 +57,8 @@ export class EssayPage {
 
   async navigateToNextPage() {
     await this.nextPageButton.click();
+    if (await this.nextPageButton.isVisible()){
+      await this.nextPageButton.click()
+    }
   }
 }

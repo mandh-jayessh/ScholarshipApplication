@@ -46,7 +46,7 @@ export class UserRegisterPage {
   }
 
   async fillEmail(email: string) {
-    await this.emailField.waitFor({state:"visible"})
+    await this.emailField.waitFor({ state:"visible" });
     await this.emailField.fill(email);
   }
 

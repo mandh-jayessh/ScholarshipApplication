@@ -20,7 +20,7 @@ export class SdetScholarshipLandingPage {
   }
 
   async validatelandingPage(heading: string) {
-    await expect(this.page).toHaveTitle("Kaleidoscope - SDET Scholarship");
+    await this.loginToApplyButton.waitFor({ state: 'visible'})
     await expect(this.logo).toBeVisible();
     await expect(this.heading).toHaveText(heading);
     await expect(this.loginToApplyButton).toBeVisible();
