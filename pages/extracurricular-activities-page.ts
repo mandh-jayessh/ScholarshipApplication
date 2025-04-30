@@ -30,9 +30,19 @@ export class ExtracurricularActivitiesPage {
   }
 
   async validateActivitiesPage(heading: string) {
-    await this.addEntryButton.waitFor({ state: "visible" });
-    await expect(this.heading).toHaveText(heading);
+    try {
+      await this.addEntryButton.waitFor({ state: "visible" });
+      await expect(this.heading).toHaveText(heading);
+    } catch (error) {
+      console.error(`Application Issue, Failed to Save Info From Page 1: ${error}`);
+      throw error;
+    }
   }
+
+  // async validateActivitiesPage(heading: string) {
+  //   await this.addEntryButton.waitFor({ state: "visible" });
+  //   await expect(this.heading).toHaveText(heading);
+  // }
 
   async ValidateAddEntryDialogModal() {
     await this.addNewEntry();
@@ -43,11 +53,11 @@ export class ExtracurricularActivitiesPage {
     await this.addEntryModalClose.click();
   }
 
-  async addEntry( activity: string, years: number, roles: string, description: string ) {
+  async addEntry(activity: string, years: number, roles: string, description: string) {
     await this.addNewEntry();
     await this.extracurricularActivityName.waitFor({ state: "visible" });
     await this.extracurricularActivityName.fill(activity);
-    await this.yearsInvolvedUpArrow.click(); 
+    await this.yearsInvolvedUpArrow.click();
     await this.yearsInvolvedField.fill(years.toString());
     await this.leadershipRolesField.fill(roles);
     await this.descriptionOfInvolvement.fill(description);
