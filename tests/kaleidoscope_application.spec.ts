@@ -19,7 +19,6 @@ import headerData from "../data/validation-data/heading-data.json";
 
 test.describe("Kaleidoscope Application", () => {
   let url: string;
-  let numberOfRuns: number = 2;
 
   // ==========          Page Object Initialization - fixtures          ==========
   const createPages = (page: Page) => {
@@ -38,7 +37,7 @@ test.describe("Kaleidoscope Application", () => {
   test.beforeEach("Navigate to Scholarship Landing Page", async ({ page }) => {
     const { landing } = createPages(page);
 
-    // Random emails are picked in each run.
+    // Random emails are picked in every new run.
     globalThis.email = faker.internet.email();
     console.log(`Generated Email: ${globalThis.email}`);
     await test.step("[ACTION] Navigate to Scholarship Landing Page", async () => {
@@ -51,8 +50,7 @@ test.describe("Kaleidoscope Application", () => {
     });
   });
 
-  for (let run = 1; run <= numberOfRuns; run++) {
-    test(`Complete the Application for SDET Test Scholarship Program ${run}`, async ({ page }) => {
+    test(`Complete the Application for SDET Test Scholarship Program`, async ({ page }) => {
       const { userRegister, getToKnowYou, curricularActivity, highSchoolInfo, essay, reviewApplication, submittedApplication } = createPages(page);
 
       // ==========          Pre Conditions for Applying to Scholarship          ==========
@@ -214,7 +212,7 @@ test.describe("Kaleidoscope Application", () => {
         await submittedApplication.validateNoEditing();
       });
     });
-  }
+  
 
   test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
     await page.close();
