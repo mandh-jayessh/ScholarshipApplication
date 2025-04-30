@@ -46,7 +46,7 @@ export class UserRegisterPage {
   }
 
   async fillEmail(email: string) {
-    await this.emailField.waitFor({ state:"visible" });
+    await this.emailField.waitFor({ state: "visible" });
     await this.emailField.fill(email);
   }
 
@@ -71,10 +71,10 @@ export class UserRegisterPage {
   }
 
   async validateRequiredFields() {
-    await this.assertFieldEditable(this.firstNameField) 
-    await this.assertFieldEditable(this.lastNameField) 
-    await this.assertFieldEditable(this.mobilePhoneField) 
-    await this.assertFieldEditable(this.createPasswordField) 
+    await this.assertFieldEditable(this.firstNameField)
+    await this.assertFieldEditable(this.lastNameField)
+    await this.assertFieldEditable(this.mobilePhoneField)
+    await this.assertFieldEditable(this.createPasswordField)
     await this.assertCheckboxChecked(this.smsNotificationCheckbox)
     await this.assertCheckboxChecked(this.emailNotificationCheckbox)
     await this.assertCheckboxChecked(this.promotionalEmailCheckbox)
@@ -95,7 +95,7 @@ export class UserRegisterPage {
     await expect(element).toBeChecked()
   }
 
-  async fillSignupDetails( fname: string, lname: string, mobno: string, password: string ) {
+  async fillSignupDetails(fname: string, lname: string, mobno: string, password: string) {
     await this.firstNameField.fill(fname);
     await this.lastNameField.fill(lname);
     await this.mobilePhoneField.fill(mobno);

@@ -36,7 +36,7 @@ export class GetToKnowYouPage {
 
   async assertFieldEditable(element: Locator) {
     await expect(element).toBeEditable();
-}
+  }
 
   async fillRequiredFields(
     address: string, state: string, city: string,

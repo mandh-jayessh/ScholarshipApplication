@@ -34,7 +34,7 @@ export class HighSchoolInfoPage {
   }
 
   async validateHighSchoolInfoPage(heading: string) {
-    if(await this.heading.textContent()!=heading){
+    if (await this.heading.textContent() != heading) {
       await this.nextPageButton.click()
     }
     await this.schoolName.waitFor({ state: 'visible' });
@@ -42,7 +42,7 @@ export class HighSchoolInfoPage {
   }
 
   async validateRequiredFields() {
-    await this.assertFieldEditable(this.schoolName); 
+    await this.assertFieldEditable(this.schoolName);
     await this.assertFieldEditable(this.schoolStreetAddress);
     await this.assertFieldEditable(this.schoolCity);
     await this.assertFieldEditable(this.schoolState);
@@ -53,7 +53,7 @@ export class HighSchoolInfoPage {
   }
 
   async assertFieldEditable(element: Locator) {
-      await expect(element).toBeEditable();
+    await expect(element).toBeEditable();
   }
 
   async assertFieldVisibleAndEnabled(element: Locator) {
@@ -63,7 +63,7 @@ export class HighSchoolInfoPage {
 
 
   async fillRequiredFields(
-    name: string, address: string, city: string, state: string, 
+    name: string, address: string, city: string, state: string,
     zip: number, gpa: number, year: number
   ) {
     await this.schoolName.fill(name);

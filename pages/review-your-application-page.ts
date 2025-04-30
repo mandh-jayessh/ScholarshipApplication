@@ -27,7 +27,7 @@ export class ReviewYourApplicationPage {
   activity3Section: Locator;
   activity4: Locator;
   activity4Section: Locator;
-  
+
   submissionConfirmText: Locator;
 
 
@@ -77,7 +77,7 @@ export class ReviewYourApplicationPage {
     await locator.click();
   }
 
-  async assertFieldValue(label: string, filledData: string, useFirst: boolean =  false, ignoreCase: boolean =  false){
+  async assertFieldValue(label: string, filledData: string, useFirst: boolean = false, ignoreCase: boolean = false) {
     let locator = this.page.getByRole("listitem").filter({ hasText: label })
     if (useFirst) {
       locator = locator.first();
@@ -132,7 +132,7 @@ export class ReviewYourApplicationPage {
   }
 
   async validateAnswersHighSchoolInfoPage(
-    name: string, address: string, city: string, state: string, 
+    name: string, address: string, city: string, state: string,
     zip: number, gpa: number, year: number
   ) {
     await this.openCloseSection(this.expandHighSchoolInfo);
@@ -153,7 +153,7 @@ export class ReviewYourApplicationPage {
 
     await this.assertFieldValue(fieldLabels.essays.animals, essay1)
     await this.assertFieldValue(fieldLabels.essays.school, essay2)
-    
+
     await this.openCloseSection(this.expandEssay);
   }
 
