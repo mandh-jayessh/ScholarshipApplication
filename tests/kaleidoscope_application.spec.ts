@@ -212,10 +212,4 @@ test.describe("Kaleidoscope Application", () => {
         await submittedApplication.validateNoEditing();
       });
     });
-  
-
-  test.afterEach("Close and Log Status", async ({ page }, testInfo) => {
-    await page.close();
-    console.log(`Test: "${testInfo.title}",Ran in Worker index ${testInfo.workerIndex} finished with status ${testInfo.status}`);
-  });
 });
