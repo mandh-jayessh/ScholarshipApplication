@@ -4,9 +4,9 @@
   "description": "Kaleidoscope SDET Scholarship application process using Playwright and Typescript",
   "main": "index.js",
   "scripts": {
-    "run": "npx playwright test",
-    "runHeaded": "npx playwright test --headed",
-    "runChromium": "npx playwright test --project chromium",
+    "test": "npx playwright test",
+    "headed": "npx playwright test --headed",
+    "chromium": "npx playwright test --project chromium",
     "showReport": "npx playwright show-report"
   },
   "keywords": [],
