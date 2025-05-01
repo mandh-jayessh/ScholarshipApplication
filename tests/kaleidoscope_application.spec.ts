@@ -62,6 +62,7 @@ test.describe("Kaleidoscope Application", () => {
       if ((await page.title()) === "Signup") {
         await test.step("[VERIFY] Signup Page", async () => {
           await userRegister.validateSignupPage(headerData.SignUpPage);
+          await userRegister.validateRequiredFields();
         });
         await test.step("[ACTION] Fill Details and Register User on Signup Page", async () => {
           await userRegister.fillSignupDetails(userData.firstName, userData.lastName, userData.mobilePhone, userData.password);
@@ -70,7 +71,6 @@ test.describe("Kaleidoscope Application", () => {
       } else if ((await page.title()) === "Login") {
         await test.step("[VERIFY] Signin Page", async () => {
           await userRegister.validateSigninPage(headerData.LoginPage);
-          await userRegister.validateRequiredFields();
         });
         await test.step("[ACTION] Perform Signin", async () => {
           await userRegister.enterPassword(userData.password);
