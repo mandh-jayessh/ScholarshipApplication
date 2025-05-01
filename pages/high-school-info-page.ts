@@ -1,5 +1,5 @@
 import { Page, Locator, expect } from "@playwright/test";
-import path from "path";
+import { fail } from "assert";
 
 export class HighSchoolInfoPage {
   page: Page;
@@ -37,7 +37,9 @@ export class HighSchoolInfoPage {
     if (await this.heading.textContent() != heading) {
       await this.nextPageButton.click()
     }
-    await this.schoolName.waitFor({ state: 'visible' });
+    await this.schoolName.waitFor({ state: 'visible', timeout: 30000 }).catch(() => {
+      fail("Application Issue, Failed to Navigate From Previous Page");
+    });;
     await expect(this.heading).toHaveText(heading);
   }
 
