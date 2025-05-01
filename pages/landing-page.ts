@@ -14,13 +14,13 @@ export class SdetScholarshipLandingPage {
   }
 
   async gotoLandingPage() {
-    await this.page.goto("https://apply.mykaleidoscope.com/program/sdet-test-scholarship", 
-      { waitUntil: "domcontentloaded" }
+    await this.page.goto("https://apply.mykaleidoscope.com/program/sdet-test-scholarship",
+      { waitUntil: "load" }
     );
   }
 
   async validatelandingPage(heading: string) {
-    await this.loginToApplyButton.waitFor({ state: 'visible'})
+    await this.loginToApplyButton.waitFor({ state: 'visible' })
     await expect(this.logo).toBeVisible();
     await expect(this.heading).toHaveText(heading);
     await expect(this.loginToApplyButton).toBeVisible();
@@ -28,6 +28,6 @@ export class SdetScholarshipLandingPage {
   }
 
   async loginToApply() {
-    await this.loginToApplyButton.click();
+    await this.loginToApplyButton.click({ force: true });
   }
 }

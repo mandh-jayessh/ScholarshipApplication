@@ -1,11 +1,16 @@
 {
   "name": "kaleidoscope-application-process",
   "version": "1.0.0",
-  "description": "",
+  "description": "Kaleidoscope SDET Scholarship application process using Playwright and Typescript",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "headed": "npx playwright test --headed",
+    "chromium": "npx playwright test --project chromium",
+    "showReport": "npx playwright show-report"
+  },
   "keywords": [],
-  "author": "",
+  "author": "mandh-jayessh <Jrmandhyannee24@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^9.6.0",

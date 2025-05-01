@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from "@playwright/test";
+import { fail } from "assert";
 
 export class ExtracurricularActivitiesPage {
   page: Page;
@@ -30,7 +31,10 @@ export class ExtracurricularActivitiesPage {
   }
 
   async validateActivitiesPage(heading: string) {
-    await this.addEntryButton.waitFor({ state: "visible" });
+    await this.addEntryButton
+      .waitFor({ state: "visible", timeout: 30000 }).catch(() => {
+        fail("Application Issue, Failed to Navigate From Previous Page");
+      });
     await expect(this.heading).toHaveText(heading);
   }
 
@@ -43,11 +47,11 @@ export class ExtracurricularActivitiesPage {
     await this.addEntryModalClose.click();
   }
 
-  async addEntry( activity: string, years: number, roles: string, description: string ) {
+  async addEntry(activity: string, years: number, roles: string, description: string) {
     await this.addNewEntry();
     await this.extracurricularActivityName.waitFor({ state: "visible" });
     await this.extracurricularActivityName.fill(activity);
-    await this.yearsInvolvedUpArrow.click(); 
+    await this.yearsInvolvedUpArrow.click();
     await this.yearsInvolvedField.fill(years.toString());
     await this.leadershipRolesField.fill(roles);
     await this.descriptionOfInvolvement.fill(description);

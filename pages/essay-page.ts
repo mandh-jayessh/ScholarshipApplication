@@ -11,7 +11,7 @@ export class EssayPage {
   essayAnimalInputBox: Locator;
   essaySchoolInputBox: Locator;
   essayOtherInputBox: Locator;
-  essayTextboxHeader : Locator
+  essayTextboxHeader: Locator
   nextPageButton: Locator;
 
   constructor(page: Page) {
@@ -30,7 +30,7 @@ export class EssayPage {
   }
 
   async validateEssayPage(heading: string) {
-    if(await this.heading.textContent()!=heading){
+    if (await this.heading.textContent() != heading) {
       await this.nextPageButton.click()
     }
     await this.otherCheckbox.waitFor({ state: "visible" });
@@ -40,7 +40,7 @@ export class EssayPage {
   async validateEssayBox(checkbox: Locator, inputBox: Locator, text: string) {
     await checkbox.check();
     await expect(checkbox).toBeChecked();
-    await expect(inputBox).toBeEditable();
+    await this.essayTextboxHeader.waitFor();
     await expect(this.essayTextboxHeader).toContainText(text)
     await expect(inputBox).toBeVisible();
     await checkbox.uncheck();
@@ -57,7 +57,7 @@ export class EssayPage {
 
   async navigateToNextPage() {
     await this.nextPageButton.click();
-    if (await this.nextPageButton.isVisible()){
+    if (await this.nextPageButton.isVisible()) {
       await this.nextPageButton.click()
     }
   }
