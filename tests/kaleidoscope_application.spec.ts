@@ -39,7 +39,7 @@ test.describe("Kaleidoscope Application", () => {
 
     // Random emails are picked in every new run.
     globalThis.email = faker.internet.email();
-    console.log(`Generated Email: ${globalThis.email}`);
+    console.log(`User Email: ${globalThis.email}`);
     await test.step("[ACTION] Navigate to Scholarship Landing Page", async () => {
       await landing.gotoLandingPage();
     });
@@ -66,7 +66,6 @@ test.describe("Kaleidoscope Application", () => {
         await test.step("[ACTION] Fill Details and Register User on Signup Page", async () => {
           await userRegister.fillSignupDetails(userData.firstName, userData.lastName, userData.mobilePhone, userData.password);
           await userRegister.clickSubmit();
-          console.log(`Registered the User: ${globalThis.email}`);
         });
       } else if ((await page.title()) === "Login") {
         await test.step("[VERIFY] Signin Page", async () => {
@@ -123,13 +122,8 @@ test.describe("Kaleidoscope Application", () => {
 
     await test.step("[ACTION] Fill out the Form on High School Information Page", async () => {
       await highSchoolInfo.fillRequiredFields(
-        schoolData.schoolName,
-        schoolData.schoolStreet,
-        schoolData.city,
-        schoolData.state,
-        schoolData.zip,
-        schoolData.grade,
-        schoolData.graduationYear
+        schoolData.schoolName, schoolData.schoolStreet, schoolData.city, schoolData.state,
+        schoolData.zip, schoolData.grade, schoolData.graduationYear
       );
     });
 
@@ -193,7 +187,6 @@ test.describe("Kaleidoscope Application", () => {
 
     await test.step("[ACTION] Capture the Page URL", async () => {
       url = page.url();
-      console.log(`URL: ${url}`);
     });
 
     await test.step("[ACTION] Submit the Application", async () => {

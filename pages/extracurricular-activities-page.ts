@@ -38,11 +38,6 @@ export class ExtracurricularActivitiesPage {
     await expect(this.heading).toHaveText(heading);
   }
 
-  // async validateActivitiesPage(heading: string) {
-  //   await this.addEntryButton.waitFor({ state: "visible" });
-  //   await expect(this.heading).toHaveText(heading);
-  // }
-
   async ValidateAddEntryDialogModal() {
     await this.addNewEntry();
     await expect(this.extracurricularActivityName).toBeEditable();

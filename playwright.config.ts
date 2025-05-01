@@ -13,11 +13,9 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
-  /* Run tests in files in parallel */
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 1 : 2,
+  workers: process.env.CI ? 1 : 3,
   retries: process.env.CI ? 2 : 1,
   /* Opt out of parallel tests on CI. */
   timeout: 200000,
@@ -32,9 +30,6 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: "retain-on-failure"
-    // launchOptions: {
-    //   slowMo: 500,
-    // },
   },
 
   /* Configure projects for major browsers */
@@ -49,10 +44,10 @@ export default defineConfig({
       use: { ...devices['Desktop Firefox'] },
     },
 
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
 
     /* Test against mobile viewports. */
     // {
