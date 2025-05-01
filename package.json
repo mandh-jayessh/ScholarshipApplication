@@ -10,7 +10,7 @@
     "showReport": "npx playwright show-report"
   },
   "keywords": [],
-  "author": "",
+  "author": "mandh-jayessh <Jrmandhyannee24@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^9.6.0",
