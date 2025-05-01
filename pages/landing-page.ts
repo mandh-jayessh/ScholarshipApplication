@@ -15,7 +15,7 @@ export class SdetScholarshipLandingPage {
 
   async gotoLandingPage() {
     await this.page.goto("https://apply.mykaleidoscope.com/program/sdet-test-scholarship",
-      { waitUntil: "domcontentloaded" }
+      { waitUntil: "load" }
     );
   }
 
@@ -28,6 +28,6 @@ export class SdetScholarshipLandingPage {
   }
 
   async loginToApply() {
-    await this.loginToApplyButton.click();
+    await this.loginToApplyButton.click({ force: true });
   }
 }

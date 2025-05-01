@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from "@playwright/test";
+import { fail } from "assert";
 
 export class ExtracurricularActivitiesPage {
   page: Page;
@@ -30,13 +31,11 @@ export class ExtracurricularActivitiesPage {
   }
 
   async validateActivitiesPage(heading: string) {
-    try {
-      await this.addEntryButton.waitFor({ state: "visible" });
-      await expect(this.heading).toHaveText(heading);
-    } catch (error) {
-      console.error(`Application Issue, Failed to Save Info From Page 1: ${error}`);
-      throw error;
-    }
+    await this.addEntryButton
+      .waitFor({ state: "visible", timeout: 30000 }).catch(() => {
+        fail("Application Issue, Failed to Navigate From Previous Page");
+      });
+    await expect(this.heading).toHaveText(heading);
   }
 
   // async validateActivitiesPage(heading: string) {
