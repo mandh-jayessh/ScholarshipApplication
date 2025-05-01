@@ -40,7 +40,7 @@ export class EssayPage {
   async validateEssayBox(checkbox: Locator, inputBox: Locator, text: string) {
     await checkbox.check();
     await expect(checkbox).toBeChecked();
-    await expect(inputBox).toBeEditable();
+    await this.essayTextboxHeader.waitFor();
     await expect(this.essayTextboxHeader).toContainText(text)
     await expect(inputBox).toBeVisible();
     await checkbox.uncheck();

@@ -42,7 +42,7 @@ export class UserRegisterPage {
   async validateSigninPage(heading: string) {
     await expect(this.heading).toHaveText(heading);
     await expect(this.signinButton).toBeVisible();
-    await expect(this.enterPasswordField).toBeEditable();
+    await this.assertFieldEditable(this.enterPasswordField)
   }
 
   async fillEmail(email: string) {
