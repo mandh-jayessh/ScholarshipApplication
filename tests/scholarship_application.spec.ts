@@ -50,7 +50,7 @@ test.describe("Scholarship Application", () => {
     });
   });
 
-  test(`Complete the Application for SDET Test Scholarship Program`, async ({ page }) => {
+  test(`Application for SDET Test Scholarship Program`, async ({ page }) => {
     const { userRegister, getToKnowYou, curricularActivity, highSchoolInfo, essay, reviewApplication, submittedApplication } = createPages(page);
 
     // ==========          Pre Conditions for Applying to Scholarship          ==========
@@ -80,12 +80,12 @@ test.describe("Scholarship Application", () => {
     });
 
     // ==========          Page 1: Get to Know you Page          ==========
-    await test.step("[VERIFY] Validate contents on Page 1 - Get to Know You Page", async () => {
+    await test.step("[VERIFY] Validate contents - Get to Know You Page", async () => {
       await getToKnowYou.validateGetToKnowYouPage(headerData.GetToKnowYouPage);
       await getToKnowYou.validateRequiredFields();  
     });
 
-    await test.step("[ACTION] Fill all Required Fields in Page 1 - Get to Know You Page", async () => {
+    await test.step("[ACTION] Fill all Required Fields - Get to Know You Page", async () => {
       await getToKnowYou.fillRequiredFields(
         userData.streetAddress, userData.state,
         userData.city, userData.zip, userData.country
@@ -94,7 +94,7 @@ test.describe("Scholarship Application", () => {
     });
 
     // ==========          Page 2: Extra Curricular Activity Page          ==========
-    await test.step("[VERIFY] Validate contents on Page 2 - Extra Curricular Activity Page", async () => {
+    await test.step("[VERIFY] Validate contents - Extra Curricular Activity Page", async () => {
       await curricularActivity.validateActivitiesPage(headerData.ExtracurricularActivitiesPage);
       await curricularActivity.ValidateAddEntryDialogModal();
       await curricularActivity.navigateToNextPage();
@@ -104,7 +104,7 @@ test.describe("Scholarship Application", () => {
       await curricularActivity.validateAtLeast2activitiesRequired();
     });
 
-    await test.step("[ACTION] Finish Page 2 by providing 4 Activities", async () => {
+    await test.step("[ACTION] Finish Page by providing 4 Activities", async () => {
       for (let i = 0; i < 4; i++) {
         await curricularActivity.addEntry(
           activityData[i].activityName, activityData[i].yearsInvolved,
@@ -115,7 +115,7 @@ test.describe("Scholarship Application", () => {
     });
 
     // ==========          Page 3: High School Information Page          ==========
-    await test.step("[VERIFY] Validate contents on Page 3 - High School Information Page", async () => {
+    await test.step("[VERIFY] Validate contents - High School Information Page", async () => {
       await highSchoolInfo.validateHighSchoolInfoPage(headerData.HighSchoolInfoPage);
       await highSchoolInfo.validateRequiredFields();   
     });
@@ -133,7 +133,7 @@ test.describe("Scholarship Application", () => {
     });
 
     // ==========          Page 4: Essay Page          ==========
-    await test.step("[VERIFY] Validate contents on Page 4 - Essay Page", async () => {
+    await test.step("[VERIFY] Validate contents - Essay Page", async () => {
       await essay.validateEssayPage(headerData.EssayPage);
     });
 
