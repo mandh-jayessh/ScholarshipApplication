@@ -1,14 +1,5 @@
-import { test, Page } from "@playwright/test";
+import { test } from '../fixtures/testFixtures'; 
 import { faker } from "@faker-js/faker";
-// Page Classes
-import { SdetScholarshipLandingPage } from "../pages/landing-page";
-import { UserRegisterPage } from "../pages/user-register-page";
-import { GetToKnowYouPage } from "../pages/get-to-know-you-page";
-import { ExtracurricularActivitiesPage } from "../pages/extracurricular-activities-page";
-import { HighSchoolInfoPage } from "../pages/high-school-info-page";
-import { EssayPage } from "../pages/essay-page";
-import { ReviewYourApplicationPage } from "../pages/review-your-application-page";
-import { SubmittedApplicationPage } from "../pages/submitted-application-page";
 // Data Files
 import userData from "../data/test-data/user-details.json";
 import schoolData from "../data/test-data/high-school-info.json";
@@ -20,22 +11,7 @@ import headerData from "../data/validation-data/heading-data.json";
 test.describe("Scholarship Application", () => {
   let url: string;
 
-  // ==========          Page Object Initialization - fixtures          ==========
-  const createPages = (page: Page) => {
-    return {
-      landing: new SdetScholarshipLandingPage(page),
-      userRegister: new UserRegisterPage(page),
-      getToKnowYou: new GetToKnowYouPage(page),
-      curricularActivity: new ExtracurricularActivitiesPage(page),
-      highSchoolInfo: new HighSchoolInfoPage(page),
-      essay: new EssayPage(page),
-      reviewApplication: new ReviewYourApplicationPage(page),
-      submittedApplication: new SubmittedApplicationPage(page),
-    };
-  };
-
-  test.beforeEach("Navigate to Scholarship Landing Page", async ({ page }) => {
-    const { landing } = createPages(page);
+  test.beforeEach("Navigate to Scholarship Landing Page", async ({ page, landing }) => {
     await page.setViewportSize({ width: 1920, height: 720 });
     // Random emails are picked in every new run.
     globalThis.email = faker.internet.email();
@@ -50,9 +26,7 @@ test.describe("Scholarship Application", () => {
     });
   });
 
-  test(`Application for SDET Test Scholarship Program`, async ({ page }) => {
-    const { userRegister, getToKnowYou, curricularActivity, highSchoolInfo, essay, reviewApplication, submittedApplication } = createPages(page);
-
+  test(`Application for SDET Test Scholarship Program`, async ({ page, userRegister, getToKnowYou, curricularActivity, highSchoolInfo, essay, reviewApplication, submittedApplication }) => {
     // ==========          Pre Conditions for Applying to Scholarship          ==========
     await test.step("[ACTION] Begin a New Application by Registering user or Logging In", async () => {
       await userRegister.fillEmail(globalThis.email);
